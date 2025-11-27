@@ -7,3 +7,4 @@ autenticarRouter.post( '/login', (req,res) => {
 autenticarRouter.post( '/cadastro', (req,res) => {
 } )
 
+export default autenticarRouter;
