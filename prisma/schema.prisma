@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Aluno {
+  id_Aluno    Int     @id
+  Modalidade  String?
+  Curso       String?
+}
+
+model Categoria {
+  id_categoria Int    @id
+  Nome         String?
+  Oculto       Boolean
+}
+
+model Convidado {
+  id_Evento            BigInt
+  id_Usuario_Academico BigInt
+
+  @@id([id_Evento, id_Usuario_Academico])
+}
+
+model Evento {
+  id_Evento            Int      @id
+  id_Organizador       BigInt?
+  id_categoria         BigInt?
+  id_Grupos_Convidados BigInt?
+  Nome_do_Evento       String?
+  Descriçao            String?
+  Local                String?
+  Data_Horario         DateTime?
+  Data_Lembrete        DateTime?
+  Oculto               Boolean?
+  Recorrente           Boolean?
+  Tipo_Recorrencia     String?
+  Recorrente_ate DateTime @db.Date
+}
+
+model Faltas {
+  id_Convidado BigInt
+  id_Evento    BigInt
+  Num_Faltas   BigInt?
+
+  @@id([id_Convidado, id_Evento])
+}
+
+model Grupo {
+  id_Grupo       Int    @id
+  Nome_Grupo     String?
+  id_Organizador BigInt?
+}
+
+model Lista_Usuarios {
+  id_Grupo             BigInt
+  id_Usuario_Academico BigInt
+
+  @@id([id_Grupo, id_Usuario_Academico])
+}
+
+model Usuario {
+  id_Usuario Int    @id
+  email      String? @map("E-mail")
+  Senha      String?
+}
+
+model Usuario_Academico {
+  id_Usuario_Academico Int    @id
+  Nome                 String?
+}
+
+model Usuario_Administrador {
+  id_Admin Int @id
+}
