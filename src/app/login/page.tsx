@@ -10,7 +10,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  // Habilita o botão somente quando os dois campos tiverem valor
   const podeEntrar = email.trim() !== "" && senha.trim() !== "";
 
   return (
