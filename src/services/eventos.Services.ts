@@ -19,6 +19,28 @@ class eventoService {
                 id_categoria: categoriaID
             }
         })
+        const convidados = await Promise.all(convidadosID_lista.map((id_convidado) => {
+            return prisma.convidado.create({
+                data: {
+                    id_Evento: newEvento.id_Evento,
+                    id_Usuario_Academico: id_convidado
+                }
+            })
+        }))
+        const listas_usuarios = await Promise.all(convidadosGrupo_lista.map((id_Grupo) => {
+            return prisma.lista_Usuarios.findMany({
+                where: {id_Grupo}
+            })
+        }))
+        const flat = listas_usuarios.flat()
+        const convidados_grupos = await Promise.all(flat.map((usuario) =>{
+            return prisma.convidado.create({
+                data: {
+                    id_Evento: newEvento.id_Evento,
+                    id_Usuario_Academico: usuario.id_Usuario_Academico
+                }
+            })
+        }))
         return newEvento
     }
 }
