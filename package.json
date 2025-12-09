@@ -9,17 +9,17 @@
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prisma:generate" : "prisma generate",
-    "migration:create" : "prisma migrate dev --create-only",
-    "migrate" : "prisma migrate deploy"
-
+    "prisma:generate": "prisma generate",
+    "migration:create": "prisma migrate dev --create-only",
+    "migrate": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^7.0.1",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/express": "^5.0.5",

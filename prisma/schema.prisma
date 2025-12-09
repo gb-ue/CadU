@@ -89,7 +89,6 @@ model Usuario {
   id_Usuario Int                        @id @default(autoincrement())
   email      String                     @map("E-mail") @unique @db.VarChar(255)
   Senha      String                     @db.VarChar(255)
-
   usuarioAcademico Usuario_Academico?
   usuarioAdministrador Usuario_Administrador?
   grupos Grupo []
