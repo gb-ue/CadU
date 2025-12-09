@@ -1,9 +1,9 @@
 import { use } from "react";
 import { prisma } from "../database/index.js";
 import type { Role } from "../types/roles.js";
+import { expressjwt } from "express-jwt";
 
-
-class autenticarServices {
+class AutenticarServices {
 
     async loginService(email : string, Senha : string){
         const user = await prisma.usuario.findFirst({
@@ -100,4 +100,8 @@ class autenticarServices {
 
         return newUser
     }
+
 }
+
+
+export const autenticarServices = new AutenticarServices()
