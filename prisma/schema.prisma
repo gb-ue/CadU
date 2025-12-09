@@ -81,19 +81,12 @@ model Lista_Usuarios {
 }
 
 model Usuario {
-<<<<<<< HEAD
   id_Usuario           Int                    @id @default(autoincrement())
   email                String                 @unique @map("E-mail") @db.VarChar(255)
   Senha                String                 @db.VarChar(255)
   evento               Evento[]
   grupos               Grupo[]
   usuarioAcademico     Usuario_Academico?
-=======
-  id_Usuario Int                        @id @default(autoincrement())
-  email      String                     @map("E-mail") @unique @db.VarChar(255)
-  Senha      String                     @db.VarChar(255)
-  usuarioAcademico Usuario_Academico?
->>>>>>> 812dc264b256e259f4174f3127fca7b2a5bebf59
   usuarioAdministrador Usuario_Administrador?
 }
 
