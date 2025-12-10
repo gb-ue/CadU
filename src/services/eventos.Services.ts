@@ -2,7 +2,7 @@ import { connect } from "node:http2"
 import { prisma } from "../database/index.js"
 import jwt from "jsonwebtoken"
 
-class eventoService {
+class EventoService {
     async createEvento(userID: number, categoriaID: number, convidadosID_lista: number[], convidadosGrupo_lista: number[], evento: Evento){
         const newEvento = await prisma.evento.create({
             data:{
@@ -43,4 +43,34 @@ class eventoService {
         }))
         return newEvento
     }
+
+    async deleteEvento(id_Evento: number){
+        return await prisma.evento.delete({
+            where: {id_Evento}
+        })
+    }
+
+    async editarEvento(id_Evento:number, evento: Evento){
+        return await prisma.evento.update({
+            where: {id_Evento},
+            data: {
+                Nome_do_Evento: evento.Nome_do_Evento,
+                Descriçao: evento.Descricao,
+                Local: evento.Local,
+                Data_Horario_Inicio: evento.Data_Horario_Inicio,
+                Data_Horario_Fim: evento.Data_Horario_Fim,
+                Recorrente_ate: evento.Recorrencia_ate,
+                Data_Lembrete: evento.Data_Lembrete
+            }
+        })
+    }
+
+    async getEvento(id_Organizador: number){
+        return await prisma.evento.findMany({
+            where: {id_Organizador}
+        })
+    }
+    
 }
+
+export const eventoService = new EventoService()

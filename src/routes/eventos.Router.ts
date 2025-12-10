@@ -1,17 +1,15 @@
 import express from "express";
+import { createEvento, editarEvento, deleteEvento, getEvento } from "../controllers/eventos.Controller.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 const eventosRouter = express.Router();
 
-eventosRouter.get( '/', (req,res) => {
-} )
+eventosRouter.get( '/', authMiddleware, getEvento)
 
-eventosRouter.post( '/', (req,res) => {
-} )
+eventosRouter.post( '/create', authMiddleware, createEvento)
 
-eventosRouter.patch( '/:id', (req,res) => {
-} )
+eventosRouter.patch( '/:id', authMiddleware, editarEvento)
 
-eventosRouter.delete( '/:id', (req,res) => {
-} )
+eventosRouter.delete( '/:id', authMiddleware, deleteEvento)
 
 eventosRouter.post( '/aceitar-convite', (req,res) => {
 } )
