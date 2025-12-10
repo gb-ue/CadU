@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express"; 
 import eventosRouter from "./routes/eventos.Router.js"
 import categoriasRouter from "./routes/categorias.Router.js"
@@ -17,5 +18,4 @@ app.use('/', autenticarRouter)
 
 app.listen(PORT, () => {
     console.log(`Sever running on http://localhost:${PORT}`)
-
 })

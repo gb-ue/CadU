@@ -1,8 +1,6 @@
 import type { NextFunction, Request, Response } from "express"
 import  { userRequestSqueme } from "../schemas/requestSchema.js"
 import { eventoService } from "../services/eventos.Services.js"
-import axios from "axios"
-import { number } from "zod"
 
 export const createEvento = async (req: Request, res: Response, next: NextFunction) => {
     try {

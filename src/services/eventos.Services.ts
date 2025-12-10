@@ -1,6 +1,4 @@
-import { connect } from "node:http2"
 import { prisma } from "../database/index.js"
-import jwt from "jsonwebtoken"
 
 class EventoService {
     async createEvento(userID: number, categoriaID: number, convidadosID_lista: number[], convidadosGrupo_lista: number[], evento: Evento){
