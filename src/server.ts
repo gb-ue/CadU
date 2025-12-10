@@ -8,7 +8,6 @@ const PORT = 3000
 const app = express();
 
 app.use('/usuario/eventos', eventosRouter)
-app.use('/usuario/eventos', eventosRouter)
 app.use('/usuario/categorias', categoriasRouter) 
 app.use('/usuario/grupos', gruposRouter)  
 app.use('/', autenticarRouter) 
