@@ -1,7 +1,8 @@
 import { use } from "react";
 import { prisma } from "../database/index.js";
 import type { Role } from "../types/roles.js";
-import { expressjwt } from "express-jwt";
+import jwt from "jsonwebtoken";
+import { id } from "zod/locales";
 
 class AutenticarServices {
 
@@ -33,6 +34,8 @@ class AutenticarServices {
                         aluno : true,
                     }
                 });
+
+
                 if (userAcademico?.aluno){
                     role = "Aluno";
                 } else {
@@ -98,7 +101,19 @@ class AutenticarServices {
         
         }
 
-        return newUser
+        return {id: newUser.id_Usuario, email: newUser.email, name : newAcademicUser.Nome ,role: role}
+    }
+
+    createAccessToken(userId: number, role: Role){
+        const token = jwt.sign(
+            {
+                id: userId,
+                role: role
+            },
+            process.env.JWT_SECRET as string,
+            { expiresIn: "1h" }
+        );
+        return token;
     }
 
 }

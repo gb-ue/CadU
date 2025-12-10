@@ -5,8 +5,9 @@ export const RoleSchema = z.enum(["Aluno", "Professor", "Coordenador", "Administ
 
 export const userRequestSqueme = z3.object({
     email: z.string(),
-    Senha: z.string(),
-    role : RoleSchema.optional,
+    senha: z.string(),
+    nome: z.string(),
+    role : RoleSchema,
     Modalidade: z.string().optional(),
     Curso:  z.string().optional()
 })
