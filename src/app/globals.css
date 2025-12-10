@@ -63,3 +63,10 @@ input {
 .fc-toolbar-title {
   @apply text-[#141313]
 }
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
