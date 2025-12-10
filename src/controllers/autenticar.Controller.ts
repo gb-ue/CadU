@@ -32,7 +32,7 @@ export const cadastro = async (req: Request, res: Response, next: NextFunction) 
 
     try{
         const body = userRequestSqueme.parse(req.body)
-        const newUser = await autenticarServices.cadastroService(body.email, body.senha, body.role, body.nome, body.Modalidade, body.Curso)
+        const newUser = await autenticarServices.cadastroService(body.email, body.senha, body.role, body.nome, body.modalidade, body.curso)
         res.status(201).json(newUser)
     } catch (error) {
         console.log(error)

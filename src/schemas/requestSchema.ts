@@ -8,6 +8,6 @@ export const userRequestSqueme = z3.object({
     senha: z.string(),
     nome: z.string(),
     role : RoleSchema,
-    Modalidade: z.string().optional(),
-    Curso:  z.string().optional()
+    modalidade: z.string().optional(),
+    curso:  z.string().optional()
 })
