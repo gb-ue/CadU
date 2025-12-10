@@ -7,7 +7,7 @@ import { id } from "zod/locales";
 class AutenticarServices {
 
     async loginService(email : string, Senha : string){
-        const user = await prisma.usuario.findFirst({
+        const user = await prisma.usuario.findUnique({
             where: { 
                 email : email,
                 Senha : Senha 
@@ -21,12 +21,12 @@ class AutenticarServices {
         if (!user) {
             return { error: "Senha ou Email incorretos" }
         }else{
-            
+
             let role : Role;
 
             if(user.usuarioAcademico){
                 
-                const userAcademico = await prisma.usuario_Academico.findFirst({
+                const userAcademico = await prisma.usuario_Academico.findUnique({
                     where: {
                         id_Usuario_Academico : user.id_Usuario
                     },
@@ -65,9 +65,14 @@ class AutenticarServices {
 
 
     async cadastroService(email : string, Senha : string, role: Role, Nome : string, Modalidade : string | undefined, Curso: string | undefined){
-        
         if (await prisma.usuario.findFirst({where : {email : email} })) {
             return { error : "Email já vinculado a uma conta"}
+        }
+
+        if (role == "Aluno"){
+            if (!Modalidade || !Curso){
+            return { error : "Campos de Modalidade ou Curso Incompletos"}
+            }
         }
 
         const newUser = await prisma.usuario.create({
@@ -85,12 +90,8 @@ class AutenticarServices {
             } 
         })
 
-        if (role === "Aluno"){
-            
-            if (!Modalidade || !Curso){
-            return { error : "Campos de Modalidade ou Curso Incompletos"}
-            }
-
+        if (role == "Aluno"){
+            if (!Modalidade || !Curso){ return { error : "Campos de Modalidade ou Curso Incompletos"} }
             const newStudent = await prisma.aluno.create({
                 data: {
                     id_Aluno: newAcademicUser.id_Usuario_Academico,
@@ -98,8 +99,8 @@ class AutenticarServices {
                     Curso: Curso
                 }
             })
-        
         }
+        
 
         return {id: newUser.id_Usuario, email: newUser.email, name : newAcademicUser.Nome ,role: role}
     }
@@ -110,7 +111,7 @@ class AutenticarServices {
                 id: userId,
                 role: role
             },
-            process.env.JWT_SECRET as string,
+            process.env.ACCESS_TOKEN_SECRET as string,
             { expiresIn: "1h" }
         );
         return token;

@@ -8,18 +8,17 @@ import type { Role } from "../types/roles.js"
 export const login = async (req: Request, res: Response, next: NextFunction) => {
 
     try{
-        const {email, Senha} = req.body;
-        const user = await autenticarServices.loginService(email, Senha)
-
+        const {email, senha} = req.body;
+        const user = await autenticarServices.loginService(email, senha)
         if (user.error) {
             res.status(500).json({error : user.error})
         }else{
-            const accesstoken = await autenticarServices.createAccessToken(user.id as number, user.role as Role)
-            return{
+            const accesstoken = autenticarServices.createAccessToken(user.id as number, user.role as Role)
+            res.status(200).json({
                 id: user.id,
                 role : user.role,
-                accesstoken  
-            }
+                accesstoken 
+            })
         }
 
     }catch (error) {
@@ -35,6 +34,7 @@ export const cadastro = async (req: Request, res: Response, next: NextFunction) 
         const newUser = await autenticarServices.cadastroService(body.email, body.senha, body.role, body.nome, body.modalidade, body.curso)
         res.status(201).json(newUser)
     } catch (error) {
+        res.status(500)
         console.log(error)
         next(error)
     }
