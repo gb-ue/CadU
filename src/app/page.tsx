@@ -5,15 +5,17 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin, { Draggable, DropArg } from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { useState } from "react";
+import PopupCriarEvento from "./components/CriarEvento/page";
 
-// interface Event{
-//   title: string;
-//   start: Date | string;
-//   allDay: boolean;
-//   id: number;
-// }
+interface Event{
+   title: string;
+   start: Date | string;
+   allDay: boolean;
+   id: number;
+}
 
 export default function Home() {
+  const [showPopupCriarEvento, setShowPopupCriarEvento] = useState(false);
   // const [events, setEvents] = useState([
   //   {title: 'Aniversário', id: '1'},
   //   {title: 'Dia das Crianças', id: '2'},
@@ -30,6 +32,11 @@ export default function Home() {
   //   allDay: false,
   //   id: 0
   // })
+
+  const handleSaveEvento = (evento: Event) => {
+  // Lógica para salvar o evento
+  setShowPopupCriarEvento(false);
+};
 
   return (
     <div className="min-h-screen flex bg-white">
@@ -92,6 +99,12 @@ export default function Home() {
             // dateClick={{}}
             // drop={}
             // eventClick={}
+            dateClick={() => setShowPopupCriarEvento(true)}
+          />
+          <PopupCriarEvento 
+            isOpen={showPopupCriarEvento}
+            onClose={() => setShowPopupCriarEvento(false)}
+            onSave={handleSaveEvento}
           />
         </div>
       </main>
