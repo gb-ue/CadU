@@ -15,14 +15,6 @@ model Aluno {
   usuario_academico Usuario_Academico @relation(fields: [id_Aluno], references: [id_Usuario_Academico])
 }
 
-model Categoria {
-  id_categoria Int     @id @default(autoincrement())
-  Nome         String  @db.VarChar(255)
-  Oculto       Boolean @default(false)
-
-  evento Evento[]
-}
-
 model Convidado {
   id_Evento            Int
   id_Usuario_Academico Int
@@ -36,7 +28,7 @@ model Convidado {
 model Evento {
   id_Evento           Int      @id @default(autoincrement())
   id_Organizador      Int
-  id_categoria        Int
+  categoria           String
   Nome_do_Evento      String   @db.VarChar(255)
   Descriçao           String   @db.VarChar(255)
   Local               String   @db.VarChar(255)
@@ -51,7 +43,6 @@ model Evento {
 
   faltas            Faltas?
   organizador       Usuario     @relation(fields: [id_Organizador], references: [id_Usuario])
-  categoria         Categoria   @relation(fields: [id_categoria], references: [id_categoria])
   Grupos_Convidados Grupo[]
   convidado         Convidado[]
 }

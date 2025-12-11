@@ -1,7 +1,7 @@
 import { prisma } from "../database/index.js"
 
 class EventoService {
-    async createEvento(userID: number, categoriaID: number, convidadosID_lista: number[], convidadosGrupo_lista: number[], evento: Evento){
+    async createEvento(userID: number, categoria: string, convidadosID_lista: number[], convidadosGrupo_lista: number[], evento: Evento){
         const newEvento = await prisma.evento.create({
             data:{
                 Nome_do_Evento: evento.Nome_do_Evento,
@@ -14,7 +14,7 @@ class EventoService {
                 Recorrente_ate: evento.Recorrencia_ate,
                 Recorrente: evento.Recorrente,
                 id_Organizador: userID,
-                id_categoria: categoriaID
+                categoria: categoria
             }
         })
         const convidados = await Promise.all(convidadosID_lista.map((id_convidado) => {
