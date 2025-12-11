@@ -17,6 +17,7 @@ model Aluno {
 model Convidado {
   id_Evento            Int
   id_Usuario_Academico Int
+  evento_visualizavel  Boolean           @default(true)
   evento               Evento            @relation(fields: [id_Evento], references: [id_Evento])
   usuario_academico    Usuario_Academico @relation(fields: [id_Usuario_Academico], references: [id_Usuario_Academico])
 
@@ -27,10 +28,9 @@ model Evento {
   id_Evento           Int         @id @default(autoincrement())
   id_Organizador      Int
   Nome_do_Evento      String      @db.VarChar(255)
-  Descriçao          String      @db.VarChar(255)
+  Descriçao           String      @db.VarChar(255)
   Local               String      @db.VarChar(255)
   Data_Lembrete       DateTime
-  Oculto              Boolean     @default(false)
   Recorrente          Boolean     @default(false)
   Tipo_Recorrencia    String      @db.VarChar(255)
   Recorrente_ate      DateTime    @db.Date
