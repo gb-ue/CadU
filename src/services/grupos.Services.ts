@@ -42,3 +42,5 @@ class GruposService {
         })
     }
 }
+
+export const gruposService = new GruposService()

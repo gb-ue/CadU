@@ -15,3 +15,5 @@ class CategoriasService {
         })
     }
 }
+
+export const categoriasService = new CategoriasService()
