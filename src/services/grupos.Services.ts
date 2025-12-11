@@ -10,6 +10,15 @@ class GruposService {
                 id_Organizador: userID
             }
         })
+        const newListaUsuarios = await Promise.all(listaIDs.map((id_membro) => {
+            return prisma.lista_Usuarios.create({
+                data:{
+                    id_Grupo: newGrupo.id_Grupo,
+                    id_Usuario_Academico: id_membro
+                }
+            })
+        }))
+        return newGrupo
     }
 
     async getGrupos(id_Organizador: number){
