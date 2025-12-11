@@ -52,7 +52,7 @@ export const editGrupos = async(req: Request, res: Response, next: NextFunction)
             Nome_Grupo: Nome_Grupo,
             id_Organizador: idOrganizador
         })
-        res.status(201).json(editGrupos)
+        res.status(201).json(editedGrupo)
     } catch (error) {
         next(error)
     }
