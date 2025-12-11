@@ -12,8 +12,7 @@ gruposRouter.patch( '/:id', authMiddleware, editGrupos)
 gruposRouter.post( '/convidados/add', (req,res) => {
 } )
 
-gruposRouter.patch( '/convidados/edit', (req,res) => {
-} )
+// gruposRouter.patch( '/convidados/edit', (req,res) => {} )
 
 gruposRouter.delete( '/convidados/remove', (req,res) => {
 } )

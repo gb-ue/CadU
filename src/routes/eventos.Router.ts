@@ -15,7 +15,6 @@ eventosRouter.patch( '/evento/hide', (req,res) => {
 } )
 
 eventosRouter.patch( '/categorias/hide', (req, res)=> {
-
 })
 
 eventosRouter.patch( '/desmarcar-presenca', (req,res) => {
