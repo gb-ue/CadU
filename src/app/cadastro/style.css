@@ -1,0 +1,288 @@
+.cadastro-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--accent-2);
+}
+
+.image-cadastro-side {
+  width: 55%;
+  position: relative;
+}
+
+.image-cadastro {
+  object-fit: contain;
+  padding: 4rem;
+}
+
+.cadastro-side {
+  width: 45%;
+  background: var(--background);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20rem 0 0 10rem;
+  justify-content: flex-start;
+  border-radius: 15px 0 0 15px;
+  overflow: auto;
+}
+
+.title-cadastro {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-wrapper-cadastro {
+  position: relative;
+  margin-top: 4rem;
+}
+
+.icon-cadastro {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2rem;
+  width: 2rem;
+}
+
+.input-cadastro {
+    width: 80%;
+    padding: 1rem 1rem 1rem 4.4rem;
+    border-radius: 15px;
+    border: 1px solid var(--text);
+    color: rgba(20, 19, 19, 0.75);
+    font-size: 2rem;
+}
+
+.input-cadastro::placeholder{
+    color: rgba(20, 19, 19, 0.75);
+}
+
+.aluno{
+    display: flex;
+    width: 80%;
+    gap: 10%;
+    margin-top: 4rem;
+}
+
+.custom-select {
+  width: 80%;
+  position: relative;
+}
+
+.select-button {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 15px;
+  border: 1px solid var(--text);
+  color: rgba(20, 19, 19, 0.75);
+  font-size: 2rem;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+.select-button .label-text {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.select-button .label-text::-webkit-scrollbar {
+  display: none; 
+}
+
+.select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid var(--text);
+  border-radius: 8px;
+  background: var(--background);
+  z-index: 10;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 7rem;
+  overflow: auto;
+}
+
+.select-options li {
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.select-options li:hover, 
+.select-options li.selected {
+  background: var(--accent);
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.select-options li:hover {
+    background: #efebeb;
+}
+
+.select-options::-webkit-scrollbar {
+  width: 10px; 
+}
+
+.select-options::-webkit-scrollbar-track {
+  background: #e6e6e6;
+  border-radius: 10px;
+}
+
+.select-options::-webkit-scrollbar-thumb {
+  background: var(--accent-2);
+  border-radius: 10px;
+}
+
+.select-options::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.btn-login {
+  background: var(--primary);
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  margin-top: 4rem;
+  color: var(--text);
+  font-size: 2rem;
+  cursor: pointer;
+  width: 80%;
+}
+
+.btn-login:hover{
+    background-color: #c56d78;
+}
+
+.enter {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+
+.login {
+  font-weight: bold;
+}
+
+@media (max-width: 1700px){
+    .cadastro-side{
+        padding: 8rem 0 0 6rem;
+    }
+
+    .title-cadastro {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .input-wrapper-cadastro {
+        margin-top: 1rem;
+    }
+
+    .aluno{
+        gap: 8%;
+        margin-top: 1rem;
+    }
+
+    .input-cadastro{
+        padding: 1rem 1rem 1rem 3rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+
+    .select-button{
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+
+    .select-options li {
+        font-size: 0.8rem;
+    }
+
+    .btn-login{
+        margin-top: 1rem;
+        font-size: 1rem;
+    }
+
+    .icon-cadastro{
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+
+    .select-icon{
+        height: 1rem;
+        width: 1rem;
+        padding-top: 0.15rem;
+        padding-left: 0.1rem;
+    }
+
+    .enter{
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px){
+    .cadastro-container{
+        flex-direction: column;
+    }
+
+    .image-cadastro-side{
+        width: 100%;
+        height: 45%;
+    }
+    
+    .cadastro-side{
+        width: 100%;
+        height: 55%;
+        padding: 1rem 0 2rem 2rem;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .title-cadastro {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-login{
+        margin-top: 1rem;
+    }
+
+    .aluno{
+        max-width: 80%;
+    }
+
+    @media (max-height: 760px){
+        .cadastro-side{
+            width: 100%;
+            height: 60%;
+            padding: 1rem 0 1rem 2rem;
+            border-radius: 15px 15px 0 0;
+        }
+
+
+        .input-cadastro{
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1rem;
+        }
+
+        .btn-login{
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+        .icon-cadastro{
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+}
