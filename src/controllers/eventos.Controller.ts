@@ -20,11 +20,11 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
         } = req.body
 
         const userID = Number(req.auth?.id)
-        const categoriaID = Number(req.query.id_categoria)
+        const categoria = String(req.query.id_categoria)
         
         const newEvento = await eventoService.createEvento(
             userID, 
-            categoriaID,
+            categoria,
             convidados || [],
             grupos_convidados ||[],
             {

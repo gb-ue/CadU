@@ -12,10 +12,10 @@ eventosRouter.patch( '/:id', authMiddleware, editarEvento)
 eventosRouter.delete( '/:id', authMiddleware, deleteEvento)
 
 eventosRouter.patch( '/evento/hide', (req,res) => {
-} ) // MORTO
+} )
 
 eventosRouter.patch( '/categorias/hide', (req, res)=> {
-    
+
 })
 
 eventosRouter.patch( '/desmarcar-presenca', (req,res) => {
