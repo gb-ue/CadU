@@ -13,7 +13,7 @@ export const metadata = {
   icons: "/logo.svg",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }) {
+export default function RootLayout({ children }:{ children: React.ReactNode }) {
   return (
     <html lang='pt-BR' className={ubuntu.className}>
       <body className="min-h-screen h-screen bg-[var(--background)]">
