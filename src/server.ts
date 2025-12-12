@@ -5,7 +5,7 @@ import categoriasRouter from "./routes/categorias.Router.js"
 import gruposRouter from "./routes/grupos.Router.js"
 import autenticarRouter from "./routes/autenticar.Router.js"
 
-const PORT = 3000
+const PORT = 8080
 const app = express();
 app.use(express.json());
 
