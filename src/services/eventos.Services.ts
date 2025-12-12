@@ -6,12 +6,12 @@ class EventoService {
             data:{
                 Nome_do_Evento: evento.Nome_do_Evento,
                 Descriçao: evento.Descricao,
-                Data_Horario_Inicio: evento.Data_Horario_Inicio,
-                Data_Horario_Fim: evento.Data_Horario_Fim,
+                Data_Horario_Inicio: new Date(evento.Data_Horario_Inicio),
+                Data_Horario_Fim: new Date(evento.Data_Horario_Fim),
                 Local: evento.Local,
-                Data_Lembrete: evento.Data_Lembrete,
+                Data_Lembrete: new Date (evento.Data_Lembrete),
                 Tipo_Recorrencia: evento.Tipo_Recorrencia,
-                Recorrente_ate: evento.Recorrencia_ate,
+                Recorrente_ate: new Date(evento.Recorrencia_ate),
                 Recorrente: evento.Recorrente,
                 id_Organizador: userID,
                 categoria: categoria

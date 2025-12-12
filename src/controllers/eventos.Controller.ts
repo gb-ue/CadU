@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from "express"
-import  { userRequestSqueme } from "../schemas/requestSchema.js"
 import { eventoService } from "../services/eventos.Services.js"
 
 export const createEvento = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +15,7 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
             Tipo_Recorrencia,
             Recorrencia_ate,
             grupos_convidados,
-            convidados,
+            convidados
         } = req.body
 
         const userID = Number(req.auth?.id)
@@ -38,7 +37,7 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
                 Tipo_Recorrencia,
                 Recorrencia_ate: new Date(Recorrencia_ate),
                 grupos_convidados,
-                convidados,
+                convidados
             }
         );
 
@@ -53,7 +52,7 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
 
 export const deleteEvento = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const eventoID = Number(req.query.id_Evento)
+        const eventoID = Number(req.params.id)
 
         const eventoDeletado = await eventoService.deleteEvento(eventoID)
 
@@ -69,7 +68,7 @@ export const getEvento = async (req: Request, res: Response, next: NextFunction)
         const idOrganizador = Number(req.auth?.id)
         const Eventos = await eventoService.getEvento(idOrganizador)
 
-        return res.status(201).json(Eventos)
+        return res.status(200).json(Eventos)
 
     } catch (error) {
         next(error)
