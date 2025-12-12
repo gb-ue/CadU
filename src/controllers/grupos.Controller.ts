@@ -12,7 +12,7 @@ export const createGrupo = async(req: Request, res: Response, next: NextFunction
 
         const newGrupo = gruposService.createGrupos(userID, listaIDs || [], Nome_Grupo);
 
-        res.status(201).json(newGrupo)
+        return res.status(201).json(newGrupo)
     } catch (error) {
         next(error)
     }
@@ -23,7 +23,7 @@ export const deleteGrupos = async(req: Request, res: Response, next: NextFunctio
 
         const grupoID = Number(req.query.id_Grupo)
         const grupoDeletado = gruposService.deleteGrupos(grupoID)
-        res.status(201).json(grupoDeletado)
+        return res.status(201).json(grupoDeletado)
 
     } catch (error) {
         next(error)
@@ -34,7 +34,7 @@ export const getGrupos = async(req: Request, res: Response, next: NextFunction) 
     try {
         const idOrganizador = Number(req.auth?.id)
         const grupos = gruposService.getGrupos(idOrganizador)
-        res.status(201).json(grupos)
+        return res.status(201).json(grupos)
     } catch (error) {
         next(error)
     }
@@ -52,7 +52,33 @@ export const editGrupos = async(req: Request, res: Response, next: NextFunction)
             Nome_Grupo: Nome_Grupo,
             id_Organizador: idOrganizador
         })
-        res.status(201).json(editedGrupo)
+        return res.status(201).json(editedGrupo)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const adicionarMembroGrupo = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const grupoID = Number(req.query.id_Grupo)
+        const email = String(req.query.email)
+
+        const membroAdicionado = gruposService.adicionarMembro(grupoID, email)
+
+        return res.status(201).json(membroAdicionado)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteMembroGrupo = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const grupoID = Number(req.query.id_Grupo)
+        const email = String(req.query.email)
+
+        const membroDeletado = gruposService.deleteMembro(grupoID, email)
+
+        return res.status(201).json(membroDeletado)
     } catch (error) {
         next(error)
     }

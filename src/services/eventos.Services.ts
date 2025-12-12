@@ -71,6 +71,34 @@ class EventoService {
 
     //ocultar por categoria: fazer uma busca de todos os eventos daquela categoria que o usuário pertence. inverter o atributo de visivel
     async ocultarCategoria(categoria: string, id_Usuario_Academico: number){
+        const eventos = await prisma.convidado.findMany({
+            where: { 
+                id_Usuario_Academico, 
+                evento: {categoria} 
+            }, select: {
+                evento_visualizavel: true
+            }
+        })
+
+        if (eventos.length === 0) return {message: "Nenhum evento encontrado para essa categoria."}
+
+        const temEventosVisiveis = eventos.some(e => e.evento_visualizavel)
+
+        const visibilidade = !temEventosVisiveis;
+
+        await prisma.convidado.updateMany({
+            where:{
+                id_Usuario_Academico, 
+                evento:{
+                    categoria
+                }
+            },
+            data:{ 
+                evento_visualizavel: visibilidade
+            }
+        })
+        return {categoria, evento_visualizavel: visibilidade}
+
     }
 
     //ocultar evento unico: mesma coisa só que evento único

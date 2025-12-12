@@ -1,5 +1,5 @@
 import express from "express";
-import { createGrupo, editGrupos, deleteGrupos, getGrupos } from "../controllers/grupos.Controller.js";
+import { createGrupo, editGrupos, deleteGrupos, getGrupos, adicionarMembroGrupo, deleteMembroGrupo } from "../controllers/grupos.Controller.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 const gruposRouter = express.Router();
 
@@ -9,13 +9,11 @@ gruposRouter.post( '/', authMiddleware, createGrupo)
 
 gruposRouter.patch( '/:id', authMiddleware, editGrupos)
 
-gruposRouter.post( '/convidados/add', (req,res) => {
-} )
+gruposRouter.post( '/convidados/add', authMiddleware, adicionarMembroGrupo)
 
 // gruposRouter.patch( '/convidados/edit', (req,res) => {} )
 
-gruposRouter.delete( '/convidados/remove', (req,res) => {
-} )
+gruposRouter.delete( '/convidados/remove', authMiddleware, deleteMembroGrupo)
 
 gruposRouter.delete( '/:id', authMiddleware, deleteGrupos)
 

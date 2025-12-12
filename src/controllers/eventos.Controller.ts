@@ -57,7 +57,7 @@ export const deleteEvento = async (req: Request, res: Response, next: NextFuncti
 
         const eventoDeletado = await eventoService.deleteEvento(eventoID)
 
-        res.status(201).json(eventoDeletado)
+        return res.status(201).json(eventoDeletado)
 
     } catch (error) {
         next(error)
@@ -69,7 +69,7 @@ export const getEvento = async (req: Request, res: Response, next: NextFunction)
         const idOrganizador = Number(req.auth?.id)
         const Eventos = await eventoService.getEvento(idOrganizador)
 
-        res.status(201).json(Eventos)
+        return res.status(201).json(Eventos)
 
     } catch (error) {
         next(error)
@@ -107,10 +107,62 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
             convidados,
         })
 
-        res.status(201).json(updatedEvento)
+        return res.status(201).json(updatedEvento)
     } catch (error) {
         next(error)
     }
 
 
+}
+
+export const ocultarEventoUnico = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userID = Number(req.auth?.id)
+        const eventoID = Number(req.query.id_Evento)
+
+        const eventoOculto = eventoService.ocultarEvento(userID, eventoID)
+
+        return res.status(201).json(eventoOculto)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const ocultarEventosPorCAtegoria = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const categoria = String(req.query.categoria)
+        const userID = Number(req.auth?.id)
+
+        const eventosOcultados = eventoService.ocultarCategoria(categoria, userID)
+
+        return res.status(201).json(eventosOcultados)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const faltarEvento = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const eventoID = Number(req.query.id_Evento)
+        const userID = Number(req.auth?.id)
+
+        const resultadoDaFalta = eventoService.marcarFalta(eventoID, userID)
+
+        return res.status(201).json(resultadoDaFalta)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getFaltasEvento = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const eventoID = Number(req.query.id_Evento)
+        const userID = Number(req.auth?.id)
+        
+        const faltas = eventoService.getFaltas(eventoID, userID)
+
+        return res.status(201).json(faltas)
+    } catch (error) {
+        next(error)
+    }
 }
