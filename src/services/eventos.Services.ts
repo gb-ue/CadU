@@ -68,6 +68,53 @@ class EventoService {
             where: {id_Organizador}
         })
     }
+
+    //ocultar por categoria: fazer uma busca de todos os eventos daquela categoria que o usuário pertence. inverter o atributo de visivel
+    async ocultarCategoria(categoria: string, id_Usuario_Academico: number){
+    }
+
+    //ocultar evento unico: mesma coisa só que evento único
+    async ocultarEvento(id_Evento: number, id_Usuario_Academico: number){
+        const instanciaEvento = await prisma.convidado.findFirst({
+            where: {id_Evento, id_Usuario_Academico}
+        })
+
+        if (!instanciaEvento){
+            throw new Error("Evento não associado ao usuário")
+        }
+
+        return await prisma.convidado.update({
+            where: {
+                id_Evento_id_Usuario_Academico: {
+                    id_Evento, id_Usuario_Academico
+                }
+            },
+            data: {
+                evento_visualizavel: !instanciaEvento.evento_visualizavel
+            }
+        })
+    }
+
+    //faltar: atualiza faltas de um evento especifico em 1
+    async marcarFalta(id_Evento: number, id_Usuario_Academico: number){
+        return await prisma.faltas.update({
+            where:{id_Convidado_id_Evento: {
+                id_Evento: id_Evento, id_Convidado: id_Usuario_Academico 
+            }},
+            data: {
+                Num_Faltas: {increment: 1}
+            }
+        })
+    }
+
+    //ver faltas: só dá get nisso
+    async getFaltas(id_Evento: number, id_Usuario_Academico: number){
+        return await prisma.faltas.findFirst({
+            where: {id_Convidado: id_Usuario_Academico, id_Evento}
+        })
+    }
+
+    //mudar faltas?????
     
 }
 
