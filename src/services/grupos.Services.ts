@@ -1,7 +1,7 @@
 import { use } from "react"
 import { prisma } from "../database/index.js"
 import type { Grupo, Usuario_Academico } from "../generated/prisma/index.js"
-import { disconnect } from "process"
+//import { disconnect } from "process"
 
 class GruposService {
     async createGrupos(userID: number, listaIDs: number[], nomeGrupo: string){

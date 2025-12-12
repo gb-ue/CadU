@@ -1,8 +1,6 @@
-import { use } from "react";
 import { prisma } from "../database/index.js";
 import type { Role } from "../types/roles.js";
 import jwt from "jsonwebtoken";
-import { id } from "zod/locales";
 
 class AutenticarServices {
 
@@ -73,8 +71,7 @@ class AutenticarServices {
             if (!Modalidade || !Curso){
             return { error : "Campos de Modalidade ou Curso Incompletos"}
             }
-        }
-
+        } 
         const newUser = await prisma.usuario.create({
             data: {
                 email : email,
