@@ -20,13 +20,14 @@ export default function Cadastro() {
     const [openModalidade, setOpenModalidade] = useState(false);
     const [openCurso, setOpenCurso] = useState(false);
 
-    const modalidadeRef = useRef(null);
-    const cursoRef = useRef(null);
+    const modalidadeRef = useRef<HTMLDivElement>(null);
+    const cursoRef = useRef<HTMLDivElement>(null);
 
-    const handleEmailChange = (e: { target: { value: never; }; }) => {
+    const handleEmailChange = (e: any) => {
         const value = e.target.value;
         setEmail(value);
 
+        // Aluno = apenas @aluno.uece.br
         setIsAluno(value.endsWith("@aluno.uece.br"));
     };
 
@@ -34,7 +35,6 @@ export default function Cadastro() {
         email.endsWith("@uece.br") || email.endsWith("@aluno.uece.br");
 
     const senhaValida = senha.length >= 8;
-
     const modalidadeValida = !isAluno || modalidadeLabel !== "Modalidade";
     const cursoValido = !isAluno || cursoLabel !== "Curso";
 
@@ -56,7 +56,7 @@ export default function Cadastro() {
     };
 
     useEffect(() => {
-        function handleClickOutside(event: { target: unknown; }) {
+        function handleClickOutside(event: any) {
             if (modalidadeRef.current && !modalidadeRef.current.contains(event.target)) {
                 setOpenModalidade(false);
             }
@@ -68,6 +68,53 @@ export default function Cadastro() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+    
+    async function handleCadastro() {
+        // Determina role com base no domínio do email
+        const role = isAluno ? "Aluno" : "Professor";
+
+        const body = {
+            email,
+            senha,
+            nome,
+            role,
+            modalidade: isAluno ? modalidadeLabel : "",
+            curso: isAluno ? cursoLabel : "",
+        };
+
+        try {
+            const res = await fetch("http://localhost:8080/cadastro", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                alert("Erro inesperado no servidor");
+                return;
+            }
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            if (!res.ok) {
+                alert("Erro ao cadastrar");
+                return;
+            }
+
+            alert("Cadastro realizado com sucesso!");
+            router.push("/login");
+
+        } catch (err) {
+            console.error(err);
+            alert("Erro ao conectar ao servidor");
+        }
+    }
 
     return (
         <div className="cadastro-container">
@@ -154,16 +201,21 @@ export default function Cadastro() {
 
                             {openCurso && (
                                 <ul className="select-options">
-                                    {["Curso", "Ciência da Computação", "Sistemas de Informação", "Matemática", "Administração"]
-                                        .map((item) => (
-                                            <li
-                                                key={item}
-                                                className={cursoLabel === item ? "selected" : ""}
-                                                onClick={() => selectCurso(item)}
-                                            >
-                                                {item}
-                                            </li>
-                                        ))}
+                                    {[
+                                        "Curso",
+                                        "Ciência da Computação",
+                                        "Sistemas de Informação",
+                                        "Matemática",
+                                        "Administração",
+                                    ].map((item) => (
+                                        <li
+                                            key={item}
+                                            className={cursoLabel === item ? "selected" : ""}
+                                            onClick={() => selectCurso(item)}
+                                        >
+                                            {item}
+                                        </li>
+                                    ))}
                                 </ul>
                             )}
                         </div>
@@ -173,10 +225,11 @@ export default function Cadastro() {
                 <button
                     className="btn-login"
                     disabled={!podeCadastrar}
-                    style={{ opacity: podeCadastrar ? 1 : 0.5,
-                            cursor: podeCadastrar ? "pointer" : "not-allowed"
-                     }}
-                    onClick={() => router.push("/login")}
+                    style={{
+                        opacity: podeCadastrar ? 1 : 0.5,
+                        cursor: podeCadastrar ? "pointer" : "not-allowed",
+                    }}
+                    onClick={handleCadastro}
                 >
                     Cadastrar
                 </button>
