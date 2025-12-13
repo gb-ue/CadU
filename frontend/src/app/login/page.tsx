@@ -31,39 +31,35 @@ export default function Login() {
 
       const data = await resposta.json();
 
-      // ❌ Erro retornado pelo backend
       if (data.error) {
         alert(data.error);
         return;
       }
 
-      // ❌ Erro causado por resposta não OK
       if (!resposta.ok) {
         alert("Erro ao fazer login.");
         return;
       }
 
-      // ✔ Salvar no localStorage
       localStorage.setItem("token", data.accesstoken);
       localStorage.setItem("userId", data.id);
       localStorage.setItem("role", data.role);
 
-      // ✔ Redirecionar dependendo do tipo de usuário
       switch (data.role) {
         case "Aluno":
-          router.push("/aluno/dashboard");
+          router.push("/home");
           break;
         case "Professor":
-          router.push("/professor/dashboard");
+          router.push("/home");
           break;
         case "Coordenador":
-          router.push("/coordenador/dashboard");
+          router.push("/home");
           break;
         case "Administrador":
-          router.push("/admin/dashboard");
+          router.push("/home");
           break;
         default:
-          router.push("/dashboard");
+          router.push("/home");
       }
 
     } catch (err) {

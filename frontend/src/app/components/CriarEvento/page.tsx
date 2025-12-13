@@ -20,8 +20,6 @@ interface PopupCriarEventoProps {
 
 export default function PopupCriarEvento({ isOpen, onClose, onSave }: PopupCriarEventoProps) {
   
-  if (!isOpen) return null;
-
   // states separados mas mantendo a estrutura
   const [title, setTitle] = useState("");
   const [dataInicio, setDataInicio] = useState("");
@@ -39,6 +37,8 @@ export default function PopupCriarEvento({ isOpen, onClose, onSave }: PopupCriar
   const [repetirAte, setRepetirAte] = useState("");
   const [lembrar, setLembrar] = useState("");
   const [showPopupDescartarAlteracoes, setShowPopupDescartarAlteracoes] = useState(false);
+
+  if (!isOpen) return null;
 
   const handleConfirm = () => {
 

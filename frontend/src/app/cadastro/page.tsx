@@ -23,11 +23,10 @@ export default function Cadastro() {
     const modalidadeRef = useRef<HTMLDivElement>(null);
     const cursoRef = useRef<HTMLDivElement>(null);
 
-    const handleEmailChange = (e: any) => {
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setEmail(value);
 
-        // Aluno = apenas @aluno.uece.br
         setIsAluno(value.endsWith("@aluno.uece.br"));
     };
 
@@ -56,22 +55,21 @@ export default function Cadastro() {
     };
 
     useEffect(() => {
-        function handleClickOutside(event: any) {
-            if (modalidadeRef.current && !modalidadeRef.current.contains(event.target)) {
+        function handleClickOutside(event: MouseEvent) {
+            if (modalidadeRef.current && !modalidadeRef.current.contains(event.target as Node)) {
                 setOpenModalidade(false);
             }
-            if (cursoRef.current && !cursoRef.current.contains(event.target)) {
+            if (cursoRef.current && !cursoRef.current.contains(event.target as Node)) {
                 setOpenCurso(false);
             }
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside as EventListener);
+        return () => document.removeEventListener("mousedown", handleClickOutside as EventListener);
     }, []);
     
     async function handleCadastro() {
-        // Determina role com base no domínio do email
-        const role = isAluno ? "Aluno" : "Professor";
+        const role = isAluno ? "Aluno" : "Funcionário";
 
         const body = {
             email,
