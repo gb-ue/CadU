@@ -42,12 +42,12 @@ export const getGrupos = async(req: Request, res: Response, next: NextFunction) 
 
 export const editGrupos = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const GrupoID = Number(req.query.id_Grupo)
+        const GrupoID = Number(req.params.id)
         const idOrganizador = Number(req.auth?.id)
         const {
             Nome_Grupo
         } = req.body
-        const editedGrupo = gruposService.editGrupos(GrupoID, {
+        const editedGrupo = await gruposService.editGrupos(GrupoID, {
             id_Grupo: GrupoID,
             Nome_Grupo: Nome_Grupo,
             id_Organizador: idOrganizador
