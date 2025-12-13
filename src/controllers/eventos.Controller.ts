@@ -71,7 +71,17 @@ export const getEvento = async (req: Request, res: Response) => {
         const Eventos = await eventoService.getEvento(idOrganizador)
         const EventosOrganizador = await eventoService.getEventoAdmin(idOrganizador)
 
-        return res.status(200).json({Eventos, EventosOrganizador})
+        const eventosUnicos = Array.from(
+            new Map(
+                [
+                ...Eventos.map(e => e.evento),
+                ...EventosOrganizador
+                ].map(evento => [evento.id_Evento, evento])
+            ).values()
+        )
+
+
+        return res.status(200).json(eventosUnicos)
 
     } catch (error) {
         console.log(error)
