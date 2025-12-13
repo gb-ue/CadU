@@ -69,8 +69,9 @@ export const getEvento = async (req: Request, res: Response) => {
     try {
         const idOrganizador = Number(req.auth?.id)
         const Eventos = await eventoService.getEvento(idOrganizador)
+        const EventosOrganizador = await eventoService.getEventoAdmin(idOrganizador)
 
-        return res.status(200).json(Eventos)
+        return res.status(200).json({Eventos, EventosOrganizador})
 
     } catch (error) {
         console.log(error)
