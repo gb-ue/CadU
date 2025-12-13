@@ -33,7 +33,7 @@ export const deleteGrupos = async(req: Request, res: Response, next: NextFunctio
 export const getGrupos = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const idOrganizador = Number(req.auth?.id)
-        const grupos = gruposService.getGrupos(idOrganizador)
+        const grupos = await gruposService.getGrupos(idOrganizador)
         return res.status(201).json(grupos)
     } catch (error) {
         next(error)
