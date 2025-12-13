@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Aluno {
+  id_Aluno          Int               @id
+  Modalidade        String            @db.VarChar(255)
+  Curso             String            @db.VarChar(255)
+  usuario_academico Usuario_Academico @relation(fields: [id_Aluno], references: [id_Usuario_Academico])
+}
+
+model Convidado {
+  id_Evento            Int
+  id_Usuario_Academico Int
+  evento_visualizavel  Boolean           @default(true)
+  evento               Evento            @relation(fields: [id_Evento], references: [id_Evento], onDelete: Cascade)
+  usuario_academico    Usuario_Academico @relation(fields: [id_Usuario_Academico], references: [id_Usuario_Academico])
+
+  @@id([id_Evento, id_Usuario_Academico])
+}
+
+model Evento {
+  id_Evento           Int         @id @default(autoincrement())
+  id_Organizador      Int
+  Nome_do_Evento      String      @db.VarChar(255)
+  Descriçao           String      @db.VarChar(255)
+  Local               String      @db.VarChar(255)
+  Data_Lembrete       DateTime
+  Recorrente          Boolean     @default(false)
+  Tipo_Recorrencia    String      @db.VarChar(255)
+  Recorrente_ate      DateTime    @db.Date
+  Data_Horario_Fim    DateTime
+  Data_Horario_Inicio DateTime
+  categoria           String
+  convidado           Convidado[]
+  organizador         Usuario     @relation(fields: [id_Organizador], references: [id_Usuario])
+  faltas              Faltas?
+  Grupos_Convidados   Grupo[]     @relation("EventoToGrupo")
+}
+
+model Faltas {
+  id_Convidado Int
+  id_Evento    Int               @unique
+  Num_Faltas   BigInt
+  convidado    Usuario_Academico @relation(fields: [id_Convidado], references: [id_Usuario_Academico])
+  evento       Evento            @relation(fields: [id_Evento], references: [id_Evento], onDelete: Cascade)
+
+  @@id([id_Convidado, id_Evento])
+}
+
+model Grupo {
+  id_Grupo       Int              @id @default(autoincrement())
+  Nome_Grupo     String           @db.VarChar(255)
+  id_Organizador Int
+  organizador    Usuario          @relation(fields: [id_Organizador], references: [id_Usuario])
+  lista          Lista_Usuarios[]
+  evento         Evento[]         @relation("EventoToGrupo")
+}
+
+model Lista_Usuarios {
+  id_Grupo             Int
+  id_Usuario_Academico Int
+  grupo                Grupo?            @relation(fields: [id_Grupo], references: [id_Grupo], onDelete: Cascade)
+  usuario              Usuario_Academico @relation(fields: [id_Usuario_Academico], references: [id_Usuario_Academico])
+
+  @@id([id_Usuario_Academico])
+}
+
+model Usuario {
+  id_Usuario           Int                    @id @default(autoincrement())
+  email                String                 @unique @map("E-mail") @db.VarChar(255)
+  Senha                String                 @db.VarChar(255)
+  evento               Evento[]
+  grupos               Grupo[]
+  usuarioAcademico     Usuario_Academico?
+  usuarioAdministrador Usuario_Administrador?
+}
+
+model Usuario_Academico {
+  id_Usuario_Academico Int             @id
+  Nome                 String          @db.VarChar(255)
+  aluno                Aluno?
+  convidado            Convidado[]
+  faltas               Faltas[]
+  lista_usuarios       Lista_Usuarios?
+  usuario              Usuario         @relation(fields: [id_Usuario_Academico], references: [id_Usuario])
+}
+
+model Usuario_Administrador {
+  id_Admin Int     @id
+  usuario  Usuario @relation(fields: [id_Admin], references: [id_Usuario])
+}
