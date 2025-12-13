@@ -63,12 +63,13 @@ model Grupo {
 }
 
 model Lista_Usuarios {
+  id Int @id @default(autoincrement())
   id_Grupo             Int
   id_Usuario_Academico Int
   grupo                Grupo?            @relation(fields: [id_Grupo], references: [id_Grupo], onDelete: Cascade)
   usuario              Usuario_Academico @relation(fields: [id_Usuario_Academico], references: [id_Usuario_Academico])
 
-  @@id([id_Usuario_Academico])
+
 }
 
 model Usuario {
@@ -87,7 +88,7 @@ model Usuario_Academico {
   aluno                Aluno?
   convidado            Convidado[]
   faltas               Faltas[]
-  lista_usuarios       Lista_Usuarios?
+  lista_usuarios       Lista_Usuarios[]
   usuario              Usuario         @relation(fields: [id_Usuario_Academico], references: [id_Usuario])
 }
 
