@@ -23,9 +23,11 @@ class GruposService {
     }
 
     async getGrupos(id_Organizador: number){
-        return await prisma.grupo.findMany({
-            where: {id_Organizador}
+        const test = await prisma.grupo.findMany({
+            where: {id_Organizador : id_Organizador}
         }) 
+        console.log(test)
+        return test
     }
 
     async editGrupos(id_Grupo: number, grupo: Grupo){
