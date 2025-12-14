@@ -15,7 +15,7 @@ eventosRouter.patch( '/categorias/hide', authMiddleware,ocultarEventosPorCAtegor
 
 eventosRouter.patch( '/:id/hide', authMiddleware, ocultarEventoUnico)
 
-eventosRouter.patch( '/desmarcar-presenca', authMiddleware, faltarEvento)
+eventosRouter.patch( '/:id/faltas', authMiddleware, faltarEvento) //faltar aula
 
 eventosRouter.get( '/:id/faltas', authMiddleware, getFaltasEvento)
 

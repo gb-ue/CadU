@@ -169,7 +169,7 @@ export const ocultarEventosPorCAtegoria = async (req: Request, res: Response, ne
 
 export const faltarEvento = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const eventoID = Number(req.query.id_Evento)
+        const eventoID = Number(req.params.id)
         const userID = Number(req.auth?.id)
 
         const resultadoDaFalta = await eventoService.marcarFalta(eventoID, userID)
