@@ -1,10 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PopupAdicionarGrupos from "./AdicionarGrupos/page";
+import PopupDescartarAlteracoes from "./DescartarAlteracoes/page";
 
 interface SidebarProps {
   role: "Administrador" | "Aluno";
+}
+
+interface Grupo {
+  id_Grupo: number;
+  Nome_Grupo: string;
+  id_Organizador: number;
 }
 
 export default function Sidebar({ role }: SidebarProps) {
@@ -12,8 +20,17 @@ export default function Sidebar({ role }: SidebarProps) {
 
   const [collapsed, setCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState(false);
+  const [openAddGroup, setOpenAddGroup] = useState(false);
   const [openFilters, setOpenFilters] = useState(false);
   const [openHiddenEvents, setOpenHiddenEvents] = useState(false);
+  const [grupos, setGrupos] = useState<Grupo[]>([]);
+  const [loadingGrupos, setLoadingGrupos] = useState(false);
+  const [grupoSelecionado, setGrupoSelecionado] = useState<Grupo | null>(null);
+  const [openDeletePopup, setOpenDeletePopup] = useState(false);
+  const [grupoParaExcluir, setGrupoParaExcluir] = useState<Grupo | null>(null);
+
+
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -29,6 +46,73 @@ export default function Sidebar({ role }: SidebarProps) {
       className="w-6 h-6"
     />
   );
+
+  const fetchGrupos = async () => {
+  setLoadingGrupos(true);
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("http://localhost:8080/usuario/grupos", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar grupos");
+    }
+
+    const data = await response.json();
+    setGrupos(data);
+  } catch (error) {
+    console.error("Erro ao buscar grupos:", error);
+  } finally {
+    setLoadingGrupos(false);
+  }
+};
+
+useEffect(() => {
+  fetchGrupos();
+}, []);
+
+const handleDeleteGrupo = async () => {
+  if (!grupoParaExcluir) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      `http://localhost:8080/usuario/grupos/${grupoParaExcluir.id_Grupo}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Erro ao deletar grupo");
+    }
+
+    setGrupos((prev) =>
+      prev.filter(
+        (grupo) => grupo.id_Grupo !== grupoParaExcluir.id_Grupo
+      )
+    );
+
+    setOpenDeletePopup(false);
+    setGrupoParaExcluir(null);
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao deletar grupo"); // opcional trocar depois por toast
+  }
+};
+
 
   return (
     <aside
@@ -65,13 +149,56 @@ export default function Sidebar({ role }: SidebarProps) {
           </button>
 
           {!collapsed && openGroups && (
-            <div className="mt-4 pl-2 space-y-3">
-              {role === "Administrador" ? (
-                <div className="text-[20px] text-[#141313]/80">
-                  E-mails UECE
-                </div>
-              ) : (
-                <button className="flex items-center gap-2 text-[#141313]/80 cursor-pointer">
+            <div className="mt-4 pl-2 flex flex-col gap-3">
+              {/* Lista de grupos */}
+              {loadingGrupos && (
+                <span className="text-[16px] text-[#141313]/60">
+                  Carregando...
+                </span>
+              )}
+
+              {!loadingGrupos && grupos.map((grupo) => (
+                <button
+                  key={grupo.id_Grupo}
+                  className="
+                    flex items-center gap-3
+                    text-left text-[20px]
+                    text-[#141313]/80
+                    hover:text-[#141313]
+                    cursor-pointer
+                  "
+                  onClick={() => {
+                    setGrupoSelecionado(grupo);
+                    setOpenAddGroup(true);
+                  }}
+                >
+                  <img
+                    src="/Users.svg"
+                    alt="Grupo"
+                    className="w-5 h-5"
+                  />
+                  <span className="flex-1">
+                    {grupo.Nome_Grupo}
+                  </span>
+                  <img
+  src="/Trash.svg"
+  alt="Excluir Grupo"
+  className="w-4 h-4"
+  onClick={(e) => {
+    e.stopPropagation();
+    setGrupoParaExcluir(grupo);
+    setOpenDeletePopup(true);
+  }}
+/>
+                </button>
+              ))}
+
+              {/* Botão adicionar grupo */}
+              {role !== "Administrador" && (
+                <button
+                  className="flex items-center gap-2 text-[#141313]/80 cursor-pointer mt-2"
+                  onClick={() => setOpenAddGroup(true)}
+                >
                   <img src="add.png" alt="Adicionar Grupo" className="w-6 h-6" />
                   <span className="text-[20px]">Adicionar Grupo</span>
                 </button>
@@ -151,6 +278,39 @@ export default function Sidebar({ role }: SidebarProps) {
           <span className="text-[20px] text-[#141313]/80">Sair</span>
         )}
       </button>
+
+      <PopupAdicionarGrupos
+  isOpen={openAddGroup}
+  onClose={() => {
+    setOpenAddGroup(false);
+    setGrupoSelecionado(null);
+  }}
+  onConfirm={() => {
+    fetchGrupos();
+    setGrupoSelecionado(null);
+    setOpenAddGroup(false);
+  }}
+  grupo={
+    grupoSelecionado
+      ? {
+          id_Grupo: grupoSelecionado.id_Grupo,
+          Nome_Grupo: grupoSelecionado.Nome_Grupo,
+          emails: [], // ⚠️ veja observação abaixo
+        }
+      : undefined
+  }
+/>
+
+<PopupDescartarAlteracoes
+  isOpen={openDeletePopup}
+  titulo="Certeza que deseja excluir este grupo?"
+  onClose={() => {
+    setOpenDeletePopup(false);
+    setGrupoParaExcluir(null);
+  }}
+  onConfirm={handleDeleteGrupo}
+/>
+
     </aside>
   );
 }
