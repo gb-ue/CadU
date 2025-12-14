@@ -69,7 +69,7 @@ export default function Cadastro() {
     }, []);
     
     async function handleCadastro() {
-        const role = isAluno ? "Aluno" : "Funcionário";
+        const role = isAluno ? "Aluno" : "Professor";
 
         const body = {
             email,
