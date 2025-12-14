@@ -11,6 +11,9 @@ class GruposService {
                 id_Organizador: userID
             }
         })
+
+        listaIDs.push(userID)
+
         const newListaUsuarios = await Promise.all(listaIDs.map((id_membro) => {
             return prisma.lista_Usuarios.create({
                 data:{
@@ -22,12 +25,21 @@ class GruposService {
         return newGrupo
     }
 
-    async getGrupos(id_Organizador: number){
-        const test = await prisma.grupo.findMany({
-            where: {id_Organizador : id_Organizador}
+    async getGrupos(id_Usuario: number){
+        const lista_pertecer = await prisma.lista_Usuarios.findMany({
+            where: {id_Usuario_Academico : id_Usuario}
         }) 
-        console.log(test)
-        return test
+        console.log(lista_pertecer)
+
+        const grupos = await Promise.all(lista_pertecer.map(async (lista) => {
+            return await prisma.grupo.findMany({
+                where:{id_Grupo : lista.id_Grupo}
+                })
+            })
+        )
+        console.log(grupos)
+
+        return grupos
     }
 
     async editGrupos(id_Grupo: number, grupo: Grupo){
@@ -76,12 +88,20 @@ class GruposService {
                 where:{id_Usuario_Academico: usuario.id_Usuario}
             })
             if (membro) {
-                return await prisma.lista_Usuarios.update({
+
+                const grupos = await prisma.lista_Usuarios.findMany({
                     where:{id_Usuario_Academico: membro.id_Usuario_Academico, id_Grupo: id_Grupo},
+                })
+
+                for (const lista_Usuarios of grupos){
+                    await prisma.lista_Usuarios.update({
+                    where:{id : lista_Usuarios.id},
                     data: {
                         grupo: {disconnect: {id_Grupo: id_Grupo}}
                     }
                 })
+                }
+                return
             }
             else return null
         }

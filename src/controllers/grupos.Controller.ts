@@ -60,10 +60,13 @@ export const editGrupos = async(req: Request, res: Response, next: NextFunction)
 
 export const adicionarMembroGrupo = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const grupoID = Number(req.query.id_Grupo)
-        const email = String(req.query.email)
+        const grupoID = Number(req.params.id)
+        const  {
+            email
+        } = req.body
+        //const email = String(req.query.email)
 
-        const membroAdicionado = gruposService.adicionarMembro(grupoID, email)
+        const membroAdicionado = await gruposService.adicionarMembro(grupoID, email)
 
         return res.status(201).json(membroAdicionado)
     } catch (error) {
@@ -76,7 +79,7 @@ export const deleteMembroGrupo = async(req: Request, res: Response, next: NextFu
         const grupoID = Number(req.query.id_Grupo)
         const email = String(req.query.email)
 
-        const membroDeletado = gruposService.deleteMembro(grupoID, email)
+        const membroDeletado = await gruposService.deleteMembro(grupoID, email)
 
         return res.status(201).json(membroDeletado)
     } catch (error) {
