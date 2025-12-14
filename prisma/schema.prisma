@@ -32,8 +32,8 @@ model Evento {
   Local               String      @db.VarChar(255)
   Data_Lembrete       DateTime
   Recorrente          Boolean     @default(false)
-  Tipo_Recorrencia    String      @db.VarChar(255)
-  Recorrente_ate      DateTime    @db.Date
+  Tipo_Recorrencia    String?      @db.VarChar(255)
+  Recorrente_ate      DateTime?    @db.Date
   Data_Horario_Fim    DateTime
   Data_Horario_Inicio DateTime
   categoria           String

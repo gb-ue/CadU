@@ -15,11 +15,17 @@ export const createEvento = async (req: Request, res: Response) => {
             Tipo_Recorrencia,
             Recorrencia_ate,
             grupos_convidados,
-            convidados
+            convidados,
+            categoria
         } = req.body
 
         const userID = Number(req.auth?.id)
-        const categoria = String(req.query.id_categoria)
+        
+        const recorrenciaAte =
+            Recorrencia_ate
+                ? new Date(Recorrencia_ate)
+                : null;
+
         
         const newEvento = await eventoService.createEvento(
             userID, 
@@ -35,9 +41,10 @@ export const createEvento = async (req: Request, res: Response) => {
                 Data_Lembrete: new Date(Data_Lembrete),
                 Recorrente,
                 Tipo_Recorrencia,
-                Recorrencia_ate: new Date(Recorrencia_ate),
+                Recorrente_ate: recorrenciaAte,
                 grupos_convidados,
-                convidados
+                convidados,
+                categoria
             }
         );
 
@@ -101,9 +108,10 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
             Data_Lembrete,
             Recorrente,
             Tipo_Recorrencia,
-            Recorrencia_ate,
+            Recorrente_ate,
             grupos_convidados,
             convidados,
+            categoria
         } = req.body
 
         const updatedEvento = await eventoService.editarEvento(idEvento, {
@@ -115,9 +123,10 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
             Data_Lembrete,
             Recorrente,
             Tipo_Recorrencia,
-            Recorrencia_ate,
+            Recorrente_ate,
             grupos_convidados,
             convidados,
+            categoria,
         })
 
         return res.status(200).json(updatedEvento)
@@ -132,9 +141,12 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
 export const ocultarEventoUnico = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userID = Number(req.auth?.id)
-        const eventoID = Number(req.query.id_Evento)
+        console.log(userID)
+        const eventoID = Number(req.params.id)
+        console.log(eventoID)
 
-        const eventoOculto = eventoService.ocultarEvento(userID, eventoID)
+        const eventoOculto = await eventoService.ocultarEvento(eventoID, userID)
+        console.log(eventoOculto)
 
         return res.status(201).json(eventoOculto)
     } catch (error) {
@@ -148,7 +160,7 @@ export const ocultarEventosPorCAtegoria = async (req: Request, res: Response, ne
         const userID = Number(req.auth?.id)
 
         const eventosOcultados = eventoService.ocultarCategoria(categoria, userID)
-
+        console.log(eventosOcultados)
         return res.status(201).json(eventosOcultados)
     } catch (error) {
         next(error)
@@ -170,7 +182,7 @@ export const faltarEvento = async (req: Request, res: Response, next: NextFuncti
 
 export const getFaltasEvento = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const eventoID = Number(req.query.id_Evento)
+        const eventoID = Number(req.params.id)
         const userID = Number(req.auth?.id)
         
         const faltas = eventoService.getFaltas(eventoID, userID)

@@ -11,7 +11,7 @@ class EventoService {
                 Local: evento.Local,
                 Data_Lembrete: evento.Data_Lembrete,
                 Tipo_Recorrencia: evento.Tipo_Recorrencia,
-                Recorrente_ate: evento.Recorrencia_ate,
+                Recorrente_ate: evento.Recorrente_ate,
                 Recorrente: evento.Recorrente,
                 id_Organizador: userID,
                 categoria: categoria
@@ -64,7 +64,7 @@ class EventoService {
                 Local: evento.Local,
                 Data_Horario_Inicio: evento.Data_Horario_Inicio,
                 Data_Horario_Fim: evento.Data_Horario_Fim,
-                Recorrente_ate: evento.Recorrencia_ate,
+                Recorrente_ate: evento.Recorrente_ate,
                 Data_Lembrete: evento.Data_Lembrete
             }
         })
