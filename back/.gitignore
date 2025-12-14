@@ -1,0 +1,11 @@
+# Dependências
+node_modules/
+
+# Ambiente
+.env
+.env.local
+.env.production
+
+
+
+/src/generated/prisma
