@@ -13,7 +13,7 @@ gruposRouter.patch( '/:id', authMiddleware, editGrupos)
 
 gruposRouter.delete( '/:id', authMiddleware, deleteGrupos)
 
-gruposRouter.delete( '/convidados/remove', authMiddleware, deleteMembroGrupo)
+gruposRouter.delete( '/:id/convidados/remove', authMiddleware, deleteMembroGrupo)
 
 
 export default gruposRouter;

@@ -76,9 +76,11 @@ export const adicionarMembroGrupo = async(req: Request, res: Response, next: Nex
 
 export const deleteMembroGrupo = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const grupoID = Number(req.query.id_Grupo)
-        const email = String(req.query.email)
-
+        const grupoID = Number(req.params.id)
+        const  {
+            email
+        } = req.body
+        console.log(email)
         const membroDeletado = await gruposService.deleteMembro(grupoID, email)
 
         return res.status(201).json(membroDeletado)

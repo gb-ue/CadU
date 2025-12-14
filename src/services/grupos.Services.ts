@@ -72,31 +72,30 @@ class GruposService {
 
     async deleteMembro(id_Grupo: number, email: string){
         const usuario = await prisma.usuario.findFirst({
-            where:{email}
+            where:{email: email}
         })
+        console.log(email)
+        console.log(usuario)
         if (usuario) {
             const membro = await prisma.usuario_Academico.findFirst({
                 where:{id_Usuario_Academico: usuario.id_Usuario}
             })
+            console.log(membro)
             if (membro) {
 
-                const grupos = await prisma.lista_Usuarios.findMany({
+                const grupo = await prisma.lista_Usuarios.findFirst({
                     where:{id_Usuario_Academico: membro.id_Usuario_Academico, id_Grupo: id_Grupo},
                 })
-
-                for (const lista_Usuarios of grupos){
-                    await prisma.lista_Usuarios.update({
-                    where:{id : lista_Usuarios.id},
-                    data: {
-                        grupo: {disconnect: {id_Grupo: id_Grupo}}
-                    }
+                if(grupo){
+                    await prisma.lista_Usuarios.delete({
+                    where:{id : grupo.id, id_Usuario_Academico: grupo.id_Usuario_Academico},
                 })
                 }
                 return
             }
-            else return null
+            else return 1
         }
-        else return null
+        else return 2
     }
 
 }
