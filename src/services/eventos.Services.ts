@@ -46,6 +46,18 @@ class EventoService {
             })
             )
         )
+        const temRecorrencia = evento.Recorrente_ate !== null;
+        if (temRecorrencia){
+            await Promise.all(
+                Array.from(idsConvidados).map(id => prisma.faltas.create({
+                    data:{
+                        Num_Faltas: 0,
+                        id_Convidado: id,
+                        id_Evento: newEvento.id_Evento
+                    }
+                }))
+            )
+        }
         return newEvento
     }
 
