@@ -11,11 +11,11 @@ eventosRouter.patch( '/:id', authMiddleware, editarEvento)
 
 eventosRouter.delete( '/:id', authMiddleware, deleteEvento)
 
+eventosRouter.patch( '/evento/hide', authMiddleware, ocultarEventoUnico)
+
 eventosRouter.patch( '/categorias/hide', authMiddleware,ocultarEventosPorCAtegoria)
 
-eventosRouter.patch( '/:id/hide', authMiddleware, ocultarEventoUnico)
-
-eventosRouter.patch( '/:id/faltas', authMiddleware, faltarEvento) //faltar aula
+eventosRouter.patch( '/desmarcar-presenca', authMiddleware, faltarEvento)
 
 eventosRouter.get( '/:id/faltas', authMiddleware, getFaltasEvento)
 

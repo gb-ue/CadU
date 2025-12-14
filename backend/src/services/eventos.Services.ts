@@ -6,58 +6,39 @@ class EventoService {
             data:{
                 Nome_do_Evento: evento.Nome_do_Evento,
                 Descriçao: evento.Descricao,
-                Data_Horario_Inicio: evento.Data_Horario_Inicio,
-                Data_Horario_Fim: evento.Data_Horario_Fim,
+                Data_Horario_Inicio: new Date(evento.Data_Horario_Inicio),
+                Data_Horario_Fim: new Date(evento.Data_Horario_Fim),
                 Local: evento.Local,
-                Data_Lembrete: evento.Data_Lembrete,
+                Data_Lembrete: new Date (evento.Data_Lembrete),
                 Tipo_Recorrencia: evento.Tipo_Recorrencia,
-                Recorrente_ate: evento.Recorrente_ate,
+                Recorrente_ate: new Date(evento.Recorrencia_ate),
                 Recorrente: evento.Recorrente,
                 id_Organizador: userID,
                 categoria: categoria
             }
         })
-        const organizadorAcademico = await prisma.usuario_Academico.findUnique({
-            where: {id_Usuario_Academico: userID}
-        })
-        
+        const convidados = await Promise.all(convidadosID_lista.map((id_convidado) => {
+            return prisma.convidado.create({
+                data: {
+                    id_Evento: newEvento.id_Evento,
+                    id_Usuario_Academico: id_convidado
+                }
+            })
+        }))
         const listas_usuarios = await Promise.all(convidadosGrupo_lista.map((id_Grupo) => {
             return prisma.lista_Usuarios.findMany({
                 where: {id_Grupo}
             })
         }))
-
-        const idsConvidados = new Set<number>()
-
-        convidadosID_lista.forEach(id => idsConvidados.add(id))
-        listas_usuarios.flat().forEach(u => idsConvidados.add(u.id_Usuario_Academico))
-
-        if (organizadorAcademico) {
-            idsConvidados.add(userID)
-        }
-
-        await Promise.all(
-            Array.from(idsConvidados).map(id =>
-            prisma.convidado.create({
+        const flat = listas_usuarios.flat()
+        const convidados_grupos = await Promise.all(flat.map((usuario) =>{
+            return prisma.convidado.create({
                 data: {
-                id_Evento: newEvento.id_Evento,
-                id_Usuario_Academico: id
+                    id_Evento: newEvento.id_Evento,
+                    id_Usuario_Academico: usuario.id_Usuario_Academico
                 }
             })
-            )
-        )
-        const temRecorrencia = evento.Recorrente_ate !== null;
-        if (temRecorrencia){
-            await Promise.all(
-                Array.from(idsConvidados).map(id => prisma.faltas.create({
-                    data:{
-                        Num_Faltas: 0,
-                        id_Convidado: id,
-                        id_Evento: newEvento.id_Evento
-                    }
-                }))
-            )
-        }
+        }))
         return newEvento
     }
 
@@ -76,25 +57,15 @@ class EventoService {
                 Local: evento.Local,
                 Data_Horario_Inicio: evento.Data_Horario_Inicio,
                 Data_Horario_Fim: evento.Data_Horario_Fim,
-                Recorrente_ate: evento.Recorrente_ate,
+                Recorrente_ate: evento.Recorrencia_ate,
                 Data_Lembrete: evento.Data_Lembrete
             }
         })
     }
 
-    async getEvento(userID: number){
-        return await prisma.convidado.findMany({
-            where: {id_Usuario_Academico: userID, evento_visualizavel: true},
-            distinct: ['id_Evento'],
-            include: {
-                evento: true
-            }
-        })
-    }
-
-    async getEventoAdmin(id_Organizador: number){
+    async getEvento(id_Organizador: number){
         return await prisma.evento.findMany({
-            where:{id_Organizador}
+            where: {id_Organizador}
         })
     }
 
