@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 
 import eventosRouter from "./routes/eventos.Router.js";
-import categoriasRouter from "./routes/categorias.Router.js";
 import gruposRouter from "./routes/grupos.Router.js";
 import autenticarRouter from "./routes/autenticar.Router.js";
 
@@ -18,7 +17,6 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/usuario/eventos', eventosRouter);
-app.use('/usuario/categorias', categoriasRouter);
 app.use('/usuario/grupos', gruposRouter);
 app.use('/', autenticarRouter);
 

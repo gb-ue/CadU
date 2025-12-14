@@ -11,6 +11,9 @@ class GruposService {
                 id_Organizador: userID
             }
         })
+
+        listaIDs.push(userID)
+
         const newListaUsuarios = await Promise.all(listaIDs.map((id_membro) => {
             return prisma.lista_Usuarios.create({
                 data:{
@@ -23,9 +26,11 @@ class GruposService {
     }
 
     async getGrupos(id_Organizador: number){
-        return await prisma.grupo.findMany({
-            where: {id_Organizador}
+        const test = await prisma.grupo.findMany({
+            where: {id_Organizador : id_Organizador}
         }) 
+        console.log(test)
+        return test
     }
 
     async editGrupos(id_Grupo: number, grupo: Grupo){
@@ -67,23 +72,30 @@ class GruposService {
 
     async deleteMembro(id_Grupo: number, email: string){
         const usuario = await prisma.usuario.findFirst({
-            where:{email}
+            where:{email: email}
         })
+        console.log(email)
+        console.log(usuario)
         if (usuario) {
             const membro = await prisma.usuario_Academico.findFirst({
                 where:{id_Usuario_Academico: usuario.id_Usuario}
             })
+            console.log(membro)
             if (membro) {
-                return await prisma.lista_Usuarios.update({
+
+                const grupo = await prisma.lista_Usuarios.findFirst({
                     where:{id_Usuario_Academico: membro.id_Usuario_Academico, id_Grupo: id_Grupo},
-                    data: {
-                        grupo: {disconnect: {id_Grupo: id_Grupo}}
-                    }
                 })
+                if(grupo){
+                    await prisma.lista_Usuarios.delete({
+                    where:{id : grupo.id, id_Usuario_Academico: grupo.id_Usuario_Academico},
+                })
+                }
+                return true
             }
-            else return null
+            else return false
         }
-        else return null
+        else return false
     }
 
 }

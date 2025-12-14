@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express"
 import { eventoService } from "../services/eventos.Services.js"
 
-export const createEvento = async (req: Request, res: Response, next: NextFunction) => {
+export const createEvento = async (req: Request, res: Response) => {
     try {
         console.log(req.body)
         const {
@@ -15,11 +15,17 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
             Tipo_Recorrencia,
             Recorrencia_ate,
             grupos_convidados,
-            convidados
+            convidados,
+            categoria
         } = req.body
 
         const userID = Number(req.auth?.id)
-        const categoria = String(req.query.id_categoria)
+        
+        const recorrenciaAte =
+            Recorrencia_ate
+                ? new Date(Recorrencia_ate)
+                : null;
+
         
         const newEvento = await eventoService.createEvento(
             userID, 
@@ -35,9 +41,10 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
                 Data_Lembrete: new Date(Data_Lembrete),
                 Recorrente,
                 Tipo_Recorrencia,
-                Recorrencia_ate: new Date(Recorrencia_ate),
+                Recorrente_ate: recorrenciaAte,
                 grupos_convidados,
-                convidados
+                convidados,
+                categoria
             }
         );
 
@@ -45,12 +52,13 @@ export const createEvento = async (req: Request, res: Response, next: NextFuncti
     } 
 
     catch (error) {
-        next(error)
+        console.log(error)
+        res.status(500).json({ error : "Algo deu errado. Tente Novamente mais tarde" })
     }
     
 }
 
-export const deleteEvento = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteEvento = async (req: Request, res: Response) => {
     try {
         const eventoID = Number(req.params.id)
 
@@ -59,25 +67,38 @@ export const deleteEvento = async (req: Request, res: Response, next: NextFuncti
         return res.status(201).json(eventoDeletado)
 
     } catch (error) {
-        next(error)
+        console.log(error)
+        res.status(500).json({ error : "Algo deu errado. Tente Novamente mais tarde" })
     }
 }
 
-export const getEvento = async (req: Request, res: Response, next: NextFunction) => {
+export const getEvento = async (req: Request, res: Response) => {
     try {
         const idOrganizador = Number(req.auth?.id)
         const Eventos = await eventoService.getEvento(idOrganizador)
+        const EventosOrganizador = await eventoService.getEventoAdmin(idOrganizador)
 
-        return res.status(200).json(Eventos)
+        const eventosUnicos = Array.from(
+            new Map(
+                [
+                ...Eventos.map(e => e.evento),
+                ...EventosOrganizador
+                ].map(evento => [evento.id_Evento, evento])
+            ).values()
+        )
+
+
+        return res.status(200).json(eventosUnicos)
 
     } catch (error) {
-        next(error)
+        console.log(error)
+        res.status(500).json({ error : "Algo deu errado. Tente Novamente mais tarde" })
     }
 }
 
 export const editarEvento = async (req: Request, res: Response, next: NextFunction) => {
     try{
-        const idEvento = Number(req.query.id_Evento)
+        const idEvento = Number(req.params.id)
         const {
             Nome_do_Evento,
             Descricao,
@@ -87,9 +108,10 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
             Data_Lembrete,
             Recorrente,
             Tipo_Recorrencia,
-            Recorrencia_ate,
+            Recorrente_ate,
             grupos_convidados,
             convidados,
+            categoria
         } = req.body
 
         const updatedEvento = await eventoService.editarEvento(idEvento, {
@@ -101,14 +123,16 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
             Data_Lembrete,
             Recorrente,
             Tipo_Recorrencia,
-            Recorrencia_ate,
+            Recorrente_ate,
             grupos_convidados,
             convidados,
+            categoria,
         })
 
-        return res.status(201).json(updatedEvento)
+        return res.status(200).json(updatedEvento)
     } catch (error) {
-        next(error)
+        console.log(error)
+        res.status(500).json({ error : "Algo deu errado. Tente Novamente mais tarde" })
     }
 
 
@@ -117,9 +141,12 @@ export const editarEvento = async (req: Request, res: Response, next: NextFuncti
 export const ocultarEventoUnico = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userID = Number(req.auth?.id)
-        const eventoID = Number(req.query.id_Evento)
+        console.log(userID)
+        const eventoID = Number(req.params.id)
+        console.log(eventoID)
 
-        const eventoOculto = eventoService.ocultarEvento(userID, eventoID)
+        const eventoOculto = await eventoService.ocultarEvento(eventoID, userID)
+        console.log(eventoOculto)
 
         return res.status(201).json(eventoOculto)
     } catch (error) {
@@ -132,8 +159,8 @@ export const ocultarEventosPorCAtegoria = async (req: Request, res: Response, ne
         const categoria = String(req.query.categoria)
         const userID = Number(req.auth?.id)
 
-        const eventosOcultados = eventoService.ocultarCategoria(categoria, userID)
-
+        const eventosOcultados = await eventoService.ocultarCategoria(categoria, userID)
+        console.log(eventosOcultados)
         return res.status(201).json(eventosOcultados)
     } catch (error) {
         next(error)
@@ -142,10 +169,10 @@ export const ocultarEventosPorCAtegoria = async (req: Request, res: Response, ne
 
 export const faltarEvento = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const eventoID = Number(req.query.id_Evento)
+        const eventoID = Number(req.params.id)
         const userID = Number(req.auth?.id)
 
-        const resultadoDaFalta = eventoService.marcarFalta(eventoID, userID)
+        const resultadoDaFalta = await eventoService.marcarFalta(eventoID, userID)
 
         return res.status(201).json(resultadoDaFalta)
     } catch (error) {
@@ -155,10 +182,10 @@ export const faltarEvento = async (req: Request, res: Response, next: NextFuncti
 
 export const getFaltasEvento = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const eventoID = Number(req.query.id_Evento)
+        const eventoID = Number(req.params.id)
         const userID = Number(req.auth?.id)
         
-        const faltas = eventoService.getFaltas(eventoID, userID)
+        const faltas = await eventoService.getFaltas(eventoID, userID)
 
         return res.status(201).json(faltas)
     } catch (error) {

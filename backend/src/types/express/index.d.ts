@@ -19,10 +19,11 @@ declare global {
         Data_Horario_Fim: Date
         Data_Lembrete: Date
         Recorrente: boolean
-        Tipo_Recorrencia: string
-        Recorrencia_ate: Date
+        Tipo_Recorrencia: string | null
+        Recorrente_ate: Date | null
         grupos_convidados: number[]
         convidados: number[]
+        categoria: string
     }
 }
 
