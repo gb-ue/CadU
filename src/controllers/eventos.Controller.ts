@@ -159,7 +159,7 @@ export const ocultarEventosPorCAtegoria = async (req: Request, res: Response, ne
         const categoria = String(req.query.categoria)
         const userID = Number(req.auth?.id)
 
-        const eventosOcultados = eventoService.ocultarCategoria(categoria, userID)
+        const eventosOcultados = await eventoService.ocultarCategoria(categoria, userID)
         console.log(eventosOcultados)
         return res.status(201).json(eventosOcultados)
     } catch (error) {
@@ -172,7 +172,7 @@ export const faltarEvento = async (req: Request, res: Response, next: NextFuncti
         const eventoID = Number(req.query.id_Evento)
         const userID = Number(req.auth?.id)
 
-        const resultadoDaFalta = eventoService.marcarFalta(eventoID, userID)
+        const resultadoDaFalta = await eventoService.marcarFalta(eventoID, userID)
 
         return res.status(201).json(resultadoDaFalta)
     } catch (error) {
@@ -185,7 +185,7 @@ export const getFaltasEvento = async (req: Request, res: Response, next: NextFun
         const eventoID = Number(req.params.id)
         const userID = Number(req.auth?.id)
         
-        const faltas = eventoService.getFaltas(eventoID, userID)
+        const faltas = await eventoService.getFaltas(eventoID, userID)
 
         return res.status(201).json(faltas)
     } catch (error) {

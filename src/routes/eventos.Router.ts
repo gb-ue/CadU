@@ -11,9 +11,9 @@ eventosRouter.patch( '/:id', authMiddleware, editarEvento)
 
 eventosRouter.delete( '/:id', authMiddleware, deleteEvento)
 
-eventosRouter.patch( '/:id/hide', authMiddleware, ocultarEventoUnico)
-
 eventosRouter.patch( '/categorias/hide', authMiddleware,ocultarEventosPorCAtegoria)
+
+eventosRouter.patch( '/:id/hide', authMiddleware, ocultarEventoUnico)
 
 eventosRouter.patch( '/desmarcar-presenca', authMiddleware, faltarEvento)
 
