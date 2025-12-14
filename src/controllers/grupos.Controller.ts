@@ -79,6 +79,10 @@ export const adicionarMembroGrupo = async(req: Request, res: Response, next: Nex
 
         const membroAdicionado = await gruposService.adicionarMembro(grupoID, email)
 
+        if (membroAdicionado === null){
+            return res.status(400).json({"erro": "E-mail não existe"})
+        }
+
         return res.status(201).json(membroAdicionado)
     } catch (error) {
         next(error)
