@@ -25,21 +25,12 @@ class GruposService {
         return newGrupo
     }
 
-    async getGrupos(id_Usuario: number){
-        const lista_pertecer = await prisma.lista_Usuarios.findMany({
-            where: {id_Usuario_Academico : id_Usuario}
+    async getGrupos(id_Organizador: number){
+        const test = await prisma.grupo.findMany({
+            where: {id_Organizador : id_Organizador}
         }) 
-        console.log(lista_pertecer)
-
-        const grupos = await Promise.all(lista_pertecer.map(async (lista) => {
-            return await prisma.grupo.findMany({
-                where:{id_Grupo : lista.id_Grupo}
-                })
-            })
-        )
-        console.log(grupos)
-
-        return grupos
+        console.log(test)
+        return test
     }
 
     async editGrupos(id_Grupo: number, grupo: Grupo){
