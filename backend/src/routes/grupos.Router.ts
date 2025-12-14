@@ -7,14 +7,13 @@ gruposRouter.get( '/', authMiddleware, getGrupos)
 
 gruposRouter.post( '/', authMiddleware, createGrupo)
 
+gruposRouter.post( '/:id/convidados/add', authMiddleware, adicionarMembroGrupo)
+
 gruposRouter.patch( '/:id', authMiddleware, editGrupos)
 
-gruposRouter.post( '/convidados/add', authMiddleware, adicionarMembroGrupo)
-
-// gruposRouter.patch( '/convidados/edit', (req,res) => {} )
-
-gruposRouter.delete( '/convidados/remove', authMiddleware, deleteMembroGrupo)
-
 gruposRouter.delete( '/:id', authMiddleware, deleteGrupos)
+
+gruposRouter.delete( '/:id/convidados/remove', authMiddleware, deleteMembroGrupo)
+
 
 export default gruposRouter;
