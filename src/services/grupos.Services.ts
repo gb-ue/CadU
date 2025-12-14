@@ -91,11 +91,11 @@ class GruposService {
                     where:{id : grupo.id, id_Usuario_Academico: grupo.id_Usuario_Academico},
                 })
                 }
-                return
+                return true
             }
-            else return 1
+            else return false
         }
-        else return 2
+        else return false
     }
 
 }
