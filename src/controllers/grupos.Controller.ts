@@ -40,6 +40,17 @@ export const getGrupos = async(req: Request, res: Response, next: NextFunction) 
     }
 }
 
+export const getGrupoUnico = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const idOrganizador = Number(req.auth?.id)
+        const id_Grupo = Number(req.params.id_Grupo)
+        const grupos = await gruposService.getGrupoUnico(idOrganizador,id_Grupo)
+        return res.status(201).json(grupos)
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const editGrupos = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const GrupoID = Number(req.params.id)
