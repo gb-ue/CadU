@@ -96,6 +96,7 @@ export default function Cadastro() {
             }
 
             if (data.error) {
+                console.log(body)
                 alert(data.error);
                 return;
             }
