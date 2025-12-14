@@ -21,8 +21,8 @@ export const createGrupo = async(req: Request, res: Response, next: NextFunction
 export const deleteGrupos = async(req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const grupoID = Number(req.query.id_Grupo)
-        const grupoDeletado = gruposService.deleteGrupos(grupoID)
+        const grupoID = Number(req.params.id)
+        const grupoDeletado = await gruposService.deleteGrupos(grupoID)
         return res.status(201).json(grupoDeletado)
 
     } catch (error) {
