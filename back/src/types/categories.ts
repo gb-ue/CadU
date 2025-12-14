@@ -1,1 +1,0 @@
-export type Categories = "Aulas" | "Eventos" | "Acadêmicos" | "Feriados" | "Pessoal" | "Reuniões"
