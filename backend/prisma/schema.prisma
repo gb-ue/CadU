@@ -28,7 +28,7 @@ model Evento {
   id_Evento           Int         @id @default(autoincrement())
   id_Organizador      Int
   Nome_do_Evento      String      @db.VarChar(255)
-  Descriçao          String      @db.VarChar(255)
+  Descricao           String      @db.VarChar(255) @default("")
   Local               String      @db.VarChar(255)
   Data_Lembrete       DateTime
   Recorrente          Boolean     @default(false)
