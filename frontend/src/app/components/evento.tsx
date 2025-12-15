@@ -6,7 +6,7 @@ interface EventoModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDelete: () => void;
-  // onEditar: () => void;
+  onEditar: () => void;
   evento: {
     titulo: string;
     inicio: Date;
@@ -23,7 +23,7 @@ export default function EventoModal({
   isOpen,
   onClose,
   onDelete,
-  // onEditar,
+  onEditar,
   evento,
   isCriador,
 }: EventoModalProps) {
@@ -71,7 +71,7 @@ export default function EventoModal({
             {isCriador && (
               <>
                 <button className="p-1 rounded-full hover:bg-black/5"
-                // onClick={onEditar}
+                onClick={onEditar}
                 >
                   <Image src="/edit.png" alt="Editar" width={20} height={20} />
                 </button>

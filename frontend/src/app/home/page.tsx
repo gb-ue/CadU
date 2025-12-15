@@ -42,28 +42,28 @@ export async function deleteEvento(idEvento: number) {
   if (!res.ok) throw new Error("Erro ao deletar evento");
 }
 
-// async function updateEvento(id: number, evento: any) {
-//   const res = await fetch(
-//     `http://localhost:8080/usuario/eventos/${id}`,
-//     {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//       },
-//       body: JSON.stringify(evento),
-//     }
-//   );
+async function updateEvento(id: number, evento: any) {
+  const res = await fetch(
+    `http://localhost:8080/usuario/eventos/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(evento),
+    }
+  );
 
-//   if (!res.ok) throw new Error("Erro ao editar evento");
-//   return res.json();
-// }
+  if (!res.ok) throw new Error("Erro ao editar evento");
+  return res.json();
+}
 
 export default function Home() {
   const calendarRef = useRef<FullCalendar | null>(null);
 
   const [showPopupCriarEvento, setShowPopupCriarEvento] = useState(false);
-  // const [eventoParaEditar, setEventoParaEditar] = useState<any | null>(null);
+  const [eventoParaEditar, setEventoParaEditar] = useState<any | null>(null);
 
   const [eventoSelecionado, setEventoSelecionado] = useState<any>(null);
   const [showEventoModal, setShowEventoModal] = useState(false);
@@ -86,33 +86,23 @@ export default function Home() {
   const isCriador =
     userId !== null && eventoSelecionado?.id_Organizador === userId;
 
-  // const handleSaveEvento = async (evento: any) => {
-  //   try {
-  //     if (evento.id_Evento) {
-  //       await updateEvento(evento.id_Evento, evento);
-  //     } else {
-  //       await createEvento(evento);
-  //     }
-
-  //     setShowPopupCriarEvento(false);
-  //     setEventoParaEditar(null);
-  //     calendarRef.current?.getApi().refetchEvents();
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert("Erro ao salvar evento");
-  //   }
-  // };
-
   const handleSaveEvento = async (evento: any) => {
     try {
-      await createEvento(evento);
+      if (evento.id_Evento) {
+        await updateEvento(evento.id_Evento, evento);
+      } else {
+        await createEvento(evento);
+      }
+
       setShowPopupCriarEvento(false);
+      setEventoParaEditar(null);
       calendarRef.current?.getApi().refetchEvents();
     } catch (error) {
       console.error(error);
-      alert("Erro ao criar evento");
+      alert("Erro ao salvar evento");
     }
   };
+
 
   const handleDeleteEvento = async () => {
     if (!eventoSelecionado) return;
@@ -246,10 +236,10 @@ export default function Home() {
               isOpen={showPopupCriarEvento}
               onClose={() => {
                 setShowPopupCriarEvento(false);
-                // setEventoParaEditar(null);
+                setEventoParaEditar(null);
               }}
               onSave={handleSaveEvento}
-              // eventoInicial={eventoParaEditar}
+              eventoInicial={eventoParaEditar}
             />
 
             {showEventoModal && eventoSelecionado && (
@@ -259,11 +249,11 @@ export default function Home() {
                 isCriador={isCriador}
                 onClose={() => setShowEventoModal(false)}
                 onDelete={handleDeleteEvento}
-                // onEditar={() => {
-                //   setShowEventoModal(false);
-                //   setEventoParaEditar(eventoSelecionado);
-                //   setShowPopupCriarEvento(true);
-                // }}
+                onEditar={() => {
+                  setShowEventoModal(false);
+                  setEventoParaEditar(eventoSelecionado);
+                  setShowPopupCriarEvento(true);
+                }}
               />
             )}
 
@@ -274,6 +264,11 @@ export default function Home() {
                 isCriador={isCriador}
                 onClose={() => setShowEventoRecorrenteModal(false)}
                 onDelete={handleDeleteEvento}
+                onEditar={() => {
+                  setShowEventoRecorrenteModal(false);
+                  setEventoParaEditar(eventoSelecionado);
+                  setShowPopupCriarEvento(true);
+                }}
               />
             )}
           </div>

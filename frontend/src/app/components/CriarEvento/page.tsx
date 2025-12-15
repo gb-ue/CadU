@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import './style.css';
 import PopupDescartarAlteracoes from '../DescartarAlteracoes/page';
 
-interface Evento {
+interface EventoBase {
   Nome_do_Evento: string;
   Descriçao: string;
   Local: string;
@@ -19,18 +19,22 @@ interface Evento {
   categoria: string;
 }
 
+interface EventoEdicao extends EventoBase {
+  id_Evento: number;
+}
+
 interface PopupCriarEventoProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (evento: Evento) => void;
-  // eventoInicial?: any;
+  onSave: (evento: EventoBase | EventoEdicao) => void;
+  eventoInicial?: EventoEdicao | null;
 }
 
 export default function PopupCriarEvento({
   isOpen,
   onClose,
   onSave,
-  // eventoInicial,
+  eventoInicial,
 }: PopupCriarEventoProps) {
   const [title, setTitle] = useState("");
   const [dataInicio, setDataInicio] = useState("");
@@ -65,68 +69,39 @@ export default function PopupCriarEvento({
   const [showPopupDescartarAlteracoes, setShowPopupDescartarAlteracoes] =
     useState(false);
 
-  // useEffect(() => {
-  //   if (!isOpen) return;
-
-  //   if (eventoInicial) {
-  //     setTitle(eventoInicial.Nome_do_Evento ?? "");
-  //     setDescricao(eventoInicial.Descriçao ?? "");
-  //     setLocal(eventoInicial.Local ?? "");
-  //     setCategoria(eventoInicial.categoria ?? "");
-
-  //     const inicio = new Date(eventoInicial.Data_Horario_Inicio);
-  //     const fim = new Date(eventoInicial.Data_Horario_Fim);
-
-  //     setDataInicio(inicio.toISOString().slice(0, 10));
-  //     setHoraInicio(inicio.toISOString().slice(11, 16));
-  //     setDataFim(fim.toISOString().slice(0, 10));
-  //     setHoraFim(fim.toISOString().slice(11, 16));
-
-  //     setEventoRecorrente(eventoInicial.Recorrente ?? false);
-  //     setRepetir(eventoInicial.Tipo_Recorrencia ?? "");
-  //     setRepetirAte("");
-  //     setLembrar("");
-
-  //   } else {
-  //     setTitle("");
-  //     setDescricao("");
-  //     setLocal("");
-  //     setCategoria("");
-  //     setDataInicio("");
-  //     setHoraInicio("");
-  //     setDataFim("");
-  //     setHoraFim("");
-  //     setEventoRecorrente(false);
-  //     setRepetir("");
-  //     setRepetirAte("");
-  //     setLembrar("");
-  //   }
-
-  //   setShowPopupDescartarAlteracoes(false);
-  // }, [isOpen, eventoInicial]);
-
   useEffect(() => {
     if (!isOpen) return;
 
-    setTitle("");
-    setDescricao("");
-    setLocal("");
-    setCategoria("");
+    if (eventoInicial) {
+      setTitle(eventoInicial.Nome_do_Evento);
+      setDescricao(eventoInicial.Descriçao ?? "");
+      setLocal(eventoInicial.Local);
+      setCategoria(eventoInicial.categoria);
 
-    setDataInicio("");
-    setDataFim("");
-    setHoraInicio("");
-    setHoraFim("");
+      const inicio = new Date(eventoInicial.Data_Horario_Inicio);
+      const fim = new Date(eventoInicial.Data_Horario_Fim);
 
-    setEventoRecorrente(false);
-    setRepetir("");
-    setRepetirAte("");
+      setDataInicio(inicio.toISOString().slice(0, 10));
+      setHoraInicio(inicio.toTimeString().slice(0, 5));
+      setHoraFim(fim.toTimeString().slice(0, 5));
 
-    setLembrar("");
-    setConvidadosSelecionado("");
-
-    setShowPopupDescartarAlteracoes(false);
-  }, [isOpen]);
+      setEventoRecorrente(eventoInicial.Recorrente);
+      setRepetir(eventoInicial.Tipo_Recorrencia ?? "");
+      setRepetirAte("");
+    } else {
+      
+      setTitle("");
+      setDescricao("");
+      setLocal("");
+      setCategoria("");
+      setDataInicio("");
+      setHoraInicio("");
+      setHoraFim("");
+      setEventoRecorrente(false);
+      setRepetir("");
+      setRepetirAte("");
+    }
+  }, [isOpen, eventoInicial]);
   
   if (!isOpen) return null;
 
@@ -181,7 +156,7 @@ export default function PopupCriarEvento({
     const grupos_convidados: number[] = [];
 
     onSave({
-      // ...(eventoInicial?.id_Evento && { id_Evento: eventoInicial.id_Evento }),
+      id_Evento: eventoInicial?.id_Evento,
       Nome_do_Evento: title,
       Descriçao: descricao,
       Local: local,

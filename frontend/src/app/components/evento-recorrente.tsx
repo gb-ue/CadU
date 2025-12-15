@@ -6,6 +6,7 @@ interface EventoRecorrenteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDelete: () => void;
+  onEditar: () => void;
   evento: {
     titulo: string;
     inicio: Date;
@@ -23,6 +24,7 @@ export default function EventoRecorrenteModal({
   isOpen,
   onClose,
   onDelete,
+  onEditar,
   evento,
   isCriador,
 }: EventoRecorrenteModalProps) {
@@ -108,7 +110,7 @@ export default function EventoRecorrenteModal({
 
             {isCriador && (
               <>
-                <button className="p-1 rounded-full hover:bg-black/5">
+                <button className="p-1 rounded-full hover:bg-black/5" onClick={onEditar}>
                   <Image
                     src="/edit.png"
                     alt="Editar"
