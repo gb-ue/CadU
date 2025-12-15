@@ -98,7 +98,7 @@
     margin-top: 0.2rem;
 }
 
-.input, .input-data{
+.input-input, .input-data{
     border: 1px solid #141313;
     background-color: transparent;
     font-size: 1rem;
@@ -111,7 +111,7 @@
     cursor: pointer;
 }
 
-.input[type="date"]{
+.input-input[type="date"]{
     margin-left: 1px;
 }
 

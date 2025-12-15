@@ -192,7 +192,7 @@ export default function PopupCriarEvento({
               <img src="/data.svg" className="icon" />
               <label className="texto">Data</label>
               <input
-                className="input"
+                className="input-input"
                 type="date"
                 value={dataInicio}
                 onChange={(e) => setDataInicio(e.target.value)}
@@ -210,14 +210,14 @@ export default function PopupCriarEvento({
               <img src="/alarm.svg" className="icon" />
               <label className="texto">Hora</label>
               <input
-                className="input"
+                className="input-input"
                 type="time"
                 value={horaInicio}
                 onChange={(e) => setHoraInicio(e.target.value)}
               />
               -
               <input
-                className="input"
+                className="input-input"
                 type="time"
                 value={horaFim}
                 onChange={(e) => setHoraFim(e.target.value)}
