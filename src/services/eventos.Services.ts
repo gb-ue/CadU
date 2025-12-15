@@ -5,7 +5,7 @@ class EventoService {
         const newEvento = await prisma.evento.create({
             data:{
                 Nome_do_Evento: evento.Nome_do_Evento,
-                Descriçao: evento.Descricao,
+                Descricao: evento.Descricao,
                 Data_Horario_Inicio: evento.Data_Horario_Inicio,
                 Data_Horario_Fim: evento.Data_Horario_Fim,
                 Local: evento.Local,
@@ -72,7 +72,7 @@ class EventoService {
             where: {id_Evento},
             data: {
                 Nome_do_Evento: evento.Nome_do_Evento,
-                Descriçao: evento.Descricao,
+                Descricao: evento.Descricao,
                 Local: evento.Local,
                 Data_Horario_Inicio: evento.Data_Horario_Inicio,
                 Data_Horario_Fim: evento.Data_Horario_Fim,
