@@ -5,7 +5,7 @@ const gruposRouter = express.Router();
 
 gruposRouter.get( '/', authMiddleware, getGrupos)
 
-gruposRouter.get( '/', authMiddleware, getEmails)
+gruposRouter.get( '/:id/emails', authMiddleware, getEmails)
 
 gruposRouter.get( '/:id', authMiddleware, getGrupoUnico)
 

@@ -116,7 +116,7 @@ class GruposService {
         select: { id_Organizador: true }
         })
 
-        if (!grupo) return []
+        if (!grupo) return {erro: "Esse grupo não existe"}
 
         const result = await prisma.lista_Usuarios.findMany({
             where: {
