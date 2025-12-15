@@ -5,6 +5,7 @@ import Image from "next/image";
 interface EventoRecorrenteModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onDelete: () => void;
   evento: {
     titulo: string;
     inicio: Date;
@@ -21,6 +22,7 @@ interface EventoRecorrenteModalProps {
 export default function EventoRecorrenteModal({
   isOpen,
   onClose,
+  onDelete,
   evento,
   isCriador,
 }: EventoRecorrenteModalProps) {
@@ -34,12 +36,16 @@ export default function EventoRecorrenteModal({
 
   const corCategoria = categoriaCorMap[evento.categoria] ?? "#CCC";
 
-  const recorrenciaTexto: Record<string, string> = {
+  const recorrenciaTextoMap: Record<string, string> = {
     Diariamente: "Todos os dias",
     Semanalmente: "Toda semana",
     Mensalmente: "Todo mês",
     Anualmente: "Todo ano",
   };
+
+  const recorrenciaTexto =
+    recorrenciaTextoMap[evento.tipoRecorrencia ?? ""] ||
+    "Evento recorrente";
 
   const horaFormatada = `${evento.inicio.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
@@ -67,44 +73,19 @@ export default function EventoRecorrenteModal({
 
           <div className="flex items-center gap-3">
             {!isCriador && (
-              <button className="p-1 rounded-full hover:bg-black/5">
-                <Image
-                  src="/faltas.png"
-                  alt="Visualizar faltas"
-                  width={20}
-                  height={20}
-                />
-              </button>
-            )}
-
-            {isCriador && (
               <>
-                <button className="p-1 rounded-full hover:bg-black/5">
-                  <Image src="/edit.png" alt="Editar" width={20} height={20} />
-                </button>
-
-                <button className="p-1 rounded-full hover:bg-black/5">
+                <button
+                  className="p-1 rounded-full hover:bg-black/5"
+                  onClick={() => console.log("Visualizar faltas")}
+                >
                   <Image
-                    src="/Eye.png"
-                    alt="Ocultar evento"
+                    src="/faltas.png"
+                    alt="Visualizar faltas"
                     width={20}
                     height={20}
                   />
                 </button>
 
-                <button className="p-1 rounded-full hover:bg-black/5">
-                  <Image
-                    src="/delete.png"
-                    alt="Deletar"
-                    width={20}
-                    height={20}
-                  />
-                </button>
-              </>
-            )}
-
-            {!isCriador && (
-              <>
                 <button className="p-1 rounded-full hover:bg-black/5">
                   <Image
                     src="/recusar.png"
@@ -125,11 +106,50 @@ export default function EventoRecorrenteModal({
               </>
             )}
 
+            {isCriador && (
+              <>
+                <button className="p-1 rounded-full hover:bg-black/5">
+                  <Image
+                    src="/edit.png"
+                    alt="Editar"
+                    width={20}
+                    height={20}
+                  />
+                </button>
+
+                <button className="p-1 rounded-full hover:bg-black/5">
+                  <Image
+                    src="/Eye.png"
+                    alt="Ocultar evento"
+                    width={20}
+                    height={20}
+                  />
+                </button>
+
+                <button
+                  className="p-1 rounded-full hover:bg-black/5"
+                  onClick={onDelete}
+                >
+                  <Image
+                    src="/delete.png"
+                    alt="Deletar"
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              </>
+            )}
+
             <button
               onClick={onClose}
               className="p-1 rounded-full hover:bg-black/5"
             >
-              <Image src="/close.png" alt="Fechar" width={20} height={20} />
+              <Image
+                src="/close.png"
+                alt="Fechar"
+                width={20}
+                height={20}
+              />
             </button>
           </div>
         </div>
@@ -138,10 +158,7 @@ export default function EventoRecorrenteModal({
           <h3 className="text-lg font-semibold">{evento.titulo}</h3>
 
           <div className="mt-3 flex justify-between text-sm text-[#141313]">
-            <span>
-              {recorrenciaTexto[evento.tipoRecorrencia ?? ""] ??
-                "Evento recorrente"}
-            </span>
+            <span>{recorrenciaTexto}</span>
             <span>{horaFormatada}</span>
           </div>
 
@@ -168,7 +185,9 @@ export default function EventoRecorrenteModal({
                   width={20}
                   height={20}
                 />
-                <p className="text-sm text-[#141313]">{evento.local}</p>
+                <p className="text-sm text-[#141313]">
+                  {evento.local}
+                </p>
               </div>
             )}
 

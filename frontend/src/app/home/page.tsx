@@ -273,6 +273,7 @@ export default function Home() {
                 evento={eventoSelecionado}
                 isCriador={isCriador}
                 onClose={() => setShowEventoRecorrenteModal(false)}
+                onDelete={handleDeleteEvento}
               />
             )}
           </div>

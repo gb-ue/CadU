@@ -29,7 +29,6 @@ export function mapEventoToCalendar(evento: any) {
     },
   };
 
-  // 🔁 EVENTO RECORRENTE
   if (evento.Recorrente && evento.Tipo_Recorrencia) {
     const freqMap: Record<string, Frequency> = {
       Diariamente: Frequency.DAILY,
@@ -42,7 +41,7 @@ export function mapEventoToCalendar(evento: any) {
       ...baseEvent,
       rrule: {
         freq: freqMap[evento.Tipo_Recorrencia],
-        dtstart: evento.Data_Horario_Inicio, // 🔴 string ISO
+        dtstart: evento.Data_Horario_Inicio,
         until: evento.Recorrente_ate ?? undefined,
       },
       duration: {
@@ -53,7 +52,6 @@ export function mapEventoToCalendar(evento: any) {
     };
   }
 
-  // 📌 EVENTO SIMPLES
   return {
     ...baseEvent,
     start: evento.Data_Horario_Inicio,

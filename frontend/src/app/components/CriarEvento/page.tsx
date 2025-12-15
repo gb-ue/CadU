@@ -108,7 +108,6 @@ export default function PopupCriarEvento({
   useEffect(() => {
     if (!isOpen) return;
 
-    // 🔹 LIMPAR TODOS OS CAMPOS AO ABRIR O MODAL
     setTitle("");
     setDescricao("");
     setLocal("");
@@ -166,7 +165,10 @@ export default function PopupCriarEvento({
     }
 
     const inicioISO = `${dataInicio}T${horaInicio}:00`;
-    const fimISO = `${dataFim}T${horaFim}:00`;
+    const fimISO = eventoRecorrente
+      ? `${dataInicio}T${horaFim}:00` // mesma data do início
+      : `${dataFim}T${horaFim}:00`;
+
 
     const dataLembrete =
       lembrar && lembrar !== "all"
