@@ -103,3 +103,15 @@ export const deleteMembroGrupo = async(req: Request, res: Response, next: NextFu
         next(error)
     }
 }
+
+export const getEmails = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const grupoID = Number(req.params.id)
+        
+        const membroDeletado = await gruposService.getEmails(grupoID)
+
+        return res.status(201).json(membroDeletado)
+    } catch (error) {
+        next(error)
+    }
+}

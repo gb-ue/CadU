@@ -12,6 +12,10 @@ class GruposService {
             }
         })
 
+        if(listaIDs.length === 0){
+            return {erro: "Grupo vazio"}
+        }
+
         listaIDs.push(userID)
 
         const newListaUsuarios = await Promise.all(listaIDs.map((id_membro) => {
@@ -104,6 +108,41 @@ class GruposService {
             else return false
         }
         else return false
+    }
+
+    async getEmails(grupoID: number) {
+        const grupo = await prisma.grupo.findUnique({
+        where: { id_Grupo: grupoID },
+        select: { id_Organizador: true }
+        })
+
+        if (!grupo) return []
+
+        const result = await prisma.lista_Usuarios.findMany({
+            where: {
+            id_Grupo: grupoID,
+            usuario: {
+                usuario: {
+                id_Usuario: {
+                    not: grupo.id_Organizador
+                }
+                }
+            }
+            },
+            select: {
+            usuario: {
+                select: {
+                usuario: {
+                    select: {
+                    email: true
+                    }
+                }
+                }
+            }
+            }
+        })
+
+    return result.map(r => r.usuario.usuario.email)
     }
 
 }

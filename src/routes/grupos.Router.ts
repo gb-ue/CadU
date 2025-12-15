@@ -1,9 +1,11 @@
 import express from "express";
-import { createGrupo, editGrupos, deleteGrupos, getGrupos, adicionarMembroGrupo, deleteMembroGrupo, getGrupoUnico } from "../controllers/grupos.Controller.js";
+import { createGrupo, editGrupos, deleteGrupos, getGrupos, adicionarMembroGrupo, deleteMembroGrupo, getGrupoUnico, getEmails } from "../controllers/grupos.Controller.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 const gruposRouter = express.Router();
 
 gruposRouter.get( '/', authMiddleware, getGrupos)
+
+gruposRouter.get( '/', authMiddleware, getEmails)
 
 gruposRouter.get( '/:id', authMiddleware, getGrupoUnico)
 
