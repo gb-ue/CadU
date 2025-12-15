@@ -48,31 +48,44 @@ export default function Sidebar({ role }: SidebarProps) {
   );
 
   const fetchGrupos = async () => {
-  setLoadingGrupos(true);
+    setLoadingGrupos(true);
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:8080/usuario/grupos", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      if (!token) {
+        console.warn("Sem token, ignorando fetch de grupos");
+        setGrupos([]);
+        return;
+      }
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar grupos");
+      const response = await fetch("http://localhost:8080/usuario/grupos", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.warn(
+          "Erro ao buscar grupos. Status:",
+          response.status
+        );
+        setGrupos([]);
+        return;
+      }
+
+      const data = await response.json();
+      setGrupos(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.warn("Falha ao buscar grupos (ignorado):", error);
+      setGrupos([]);
+    } finally {
+      setLoadingGrupos(false);
     }
+  };
 
-    const data = await response.json();
-    setGrupos(data);
-  } catch (error) {
-    console.error("Erro ao buscar grupos:", error);
-  } finally {
-    setLoadingGrupos(false);
-  }
-};
 
 useEffect(() => {
   fetchGrupos();

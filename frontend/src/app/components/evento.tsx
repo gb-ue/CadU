@@ -5,6 +5,8 @@ import Image from "next/image";
 interface EventoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onDelete: () => void;
+  // onEditar: () => void;
   evento: {
     titulo: string;
     inicio: Date;
@@ -20,6 +22,8 @@ interface EventoModalProps {
 export default function EventoModal({
   isOpen,
   onClose,
+  onDelete,
+  // onEditar,
   evento,
   isCriador,
 }: EventoModalProps) {
@@ -66,7 +70,9 @@ export default function EventoModal({
           <div className="flex items-center gap-3">
             {isCriador && (
               <>
-                <button className="p-1 rounded-full hover:bg-black/5">
+                <button className="p-1 rounded-full hover:bg-black/5"
+                // onClick={onEditar}
+                >
                   <Image src="/edit.png" alt="Editar" width={20} height={20} />
                 </button>
 
@@ -79,7 +85,7 @@ export default function EventoModal({
                   />
                 </button>
 
-                <button className="p-1 rounded-full hover:bg-black/5">
+                <button className="p-1 rounded-full hover:bg-black/5" onClick={onDelete}>
                   <Image
                     src="/delete.png"
                     alt="Deletar"
