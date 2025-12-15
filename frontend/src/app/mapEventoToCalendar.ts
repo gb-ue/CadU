@@ -1,20 +1,35 @@
 import { Frequency } from "rrule";
 
 export function mapEventoToCalendar(evento: any) {
+  const categoriaColorMap: Record<string, string> = {
+    "Evento Acadêmico": "#F2C94C",
+    "Evento Pessoal": "#47C16B",
+    "Outro": "#9B51E0",
+  };
+
+  const corCategoria =
+    categoriaColorMap[evento.categoria] ?? "#3788d8";
+
   const baseEvent: any = {
     id: String(evento.id_Evento),
     title: evento.Nome_do_Evento,
-    start: evento.Data_Horario_Inicio,
-    end: evento.Data_Horario_Fim,
+
+    backgroundColor: corCategoria,
+    borderColor: corCategoria,
+    textColor: "#141313",
+
     extendedProps: {
       id_Evento: evento.id_Evento,
       id_Organizador: evento.id_Organizador,
       categoria: evento.categoria,
       recorrente: evento.Recorrente,
       tipoRecorrencia: evento.Tipo_Recorrencia,
+      descricao: evento.Descriçao,
+      local: evento.Local,
     },
   };
 
+  // 🔁 EVENTO RECORRENTE
   if (evento.Recorrente && evento.Tipo_Recorrencia) {
     const freqMap: Record<string, Frequency> = {
       Diariamente: Frequency.DAILY,
@@ -27,10 +42,8 @@ export function mapEventoToCalendar(evento: any) {
       ...baseEvent,
       rrule: {
         freq: freqMap[evento.Tipo_Recorrencia],
-        dtstart: new Date(evento.Data_Horario_Inicio),
-        until: evento.Recorrente_ate
-          ? new Date(evento.Recorrente_ate)
-          : undefined,
+        dtstart: evento.Data_Horario_Inicio, // 🔴 string ISO
+        until: evento.Recorrente_ate ?? undefined,
       },
       duration: {
         milliseconds:
@@ -40,5 +53,10 @@ export function mapEventoToCalendar(evento: any) {
     };
   }
 
-  return baseEvent;
+  // 📌 EVENTO SIMPLES
+  return {
+    ...baseEvent,
+    start: evento.Data_Horario_Inicio,
+    end: evento.Data_Horario_Fim,
+  };
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './style.css';
 import PopupDescartarAlteracoes from '../DescartarAlteracoes/page';
 
@@ -23,12 +23,14 @@ interface PopupCriarEventoProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (evento: Evento) => void;
+  // eventoInicial?: any;
 }
 
 export default function PopupCriarEvento({
   isOpen,
   onClose,
   onSave,
+  // eventoInicial,
 }: PopupCriarEventoProps) {
   const [title, setTitle] = useState("");
   const [dataInicio, setDataInicio] = useState("");
@@ -47,9 +49,86 @@ export default function PopupCriarEvento({
   const [repetirAte, setRepetirAte] = useState("");
   const [lembrar, setLembrar] = useState("");
 
+  const handleCancel = () => {
+    setShowPopupDescartarAlteracoes(true);
+  };
+
+  const handleConfirmDiscard = () => {
+    setShowPopupDescartarAlteracoes(false);
+    onClose();
+  };
+
+  const handleCloseDiscard = () => {
+    setShowPopupDescartarAlteracoes(false);
+  };
+
   const [showPopupDescartarAlteracoes, setShowPopupDescartarAlteracoes] =
     useState(false);
 
+  // useEffect(() => {
+  //   if (!isOpen) return;
+
+  //   if (eventoInicial) {
+  //     setTitle(eventoInicial.Nome_do_Evento ?? "");
+  //     setDescricao(eventoInicial.Descriçao ?? "");
+  //     setLocal(eventoInicial.Local ?? "");
+  //     setCategoria(eventoInicial.categoria ?? "");
+
+  //     const inicio = new Date(eventoInicial.Data_Horario_Inicio);
+  //     const fim = new Date(eventoInicial.Data_Horario_Fim);
+
+  //     setDataInicio(inicio.toISOString().slice(0, 10));
+  //     setHoraInicio(inicio.toISOString().slice(11, 16));
+  //     setDataFim(fim.toISOString().slice(0, 10));
+  //     setHoraFim(fim.toISOString().slice(11, 16));
+
+  //     setEventoRecorrente(eventoInicial.Recorrente ?? false);
+  //     setRepetir(eventoInicial.Tipo_Recorrencia ?? "");
+  //     setRepetirAte("");
+  //     setLembrar("");
+
+  //   } else {
+  //     setTitle("");
+  //     setDescricao("");
+  //     setLocal("");
+  //     setCategoria("");
+  //     setDataInicio("");
+  //     setHoraInicio("");
+  //     setDataFim("");
+  //     setHoraFim("");
+  //     setEventoRecorrente(false);
+  //     setRepetir("");
+  //     setRepetirAte("");
+  //     setLembrar("");
+  //   }
+
+  //   setShowPopupDescartarAlteracoes(false);
+  // }, [isOpen, eventoInicial]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // 🔹 LIMPAR TODOS OS CAMPOS AO ABRIR O MODAL
+    setTitle("");
+    setDescricao("");
+    setLocal("");
+    setCategoria("");
+
+    setDataInicio("");
+    setDataFim("");
+    setHoraInicio("");
+    setHoraFim("");
+
+    setEventoRecorrente(false);
+    setRepetir("");
+    setRepetirAte("");
+
+    setLembrar("");
+    setConvidadosSelecionado("");
+
+    setShowPopupDescartarAlteracoes(false);
+  }, [isOpen]);
+  
   if (!isOpen) return null;
 
   const calcularRecorrenciaAte = (): string | null => {
@@ -100,6 +179,7 @@ export default function PopupCriarEvento({
     const grupos_convidados: number[] = [];
 
     onSave({
+      // ...(eventoInicial?.id_Evento && { id_Evento: eventoInicial.id_Evento }),
       Nome_do_Evento: title,
       Descriçao: descricao,
       Local: local,
@@ -118,7 +198,7 @@ export default function PopupCriarEvento({
   };
 
   return (
-    <div className="overlay" onClick={onClose}>
+    <div className="overlay">
       <div className="popup" onClick={(e) => e.stopPropagation()}>
         <div className="rosa" />
 
@@ -284,15 +364,15 @@ export default function PopupCriarEvento({
             <div className="botoes">
               <button
                 className="btn-cancelar"
-                onClick={() => setShowPopupDescartarAlteracoes(true)}
+                onClick={handleCancel}
               >
                 Cancelar
               </button>
 
               <PopupDescartarAlteracoes
                 isOpen={showPopupDescartarAlteracoes}
-                onClose={() => setShowPopupDescartarAlteracoes(false)}
-                onConfirm={onClose}
+                onClose={handleCloseDiscard}
+                onConfirm={handleConfirmDiscard}
               />
 
               <button
