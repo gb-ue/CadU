@@ -64,6 +64,7 @@ export default function Home() {
 
   const [showPopupCriarEvento, setShowPopupCriarEvento] = useState(false);
   const [eventoParaEditar, setEventoParaEditar] = useState<any | null>(null);
+  const [dataSelecionada, setDataSelecionada] = useState<string | null>(null);
 
   const [eventoSelecionado, setEventoSelecionado] = useState<any>(null);
   const [showEventoModal, setShowEventoModal] = useState(false);
@@ -130,8 +131,8 @@ export default function Home() {
     <div className="h-screen flex bg-white overflow-hidden">
       <Sidebar role={role} />
 
-      <main className="flex-1 p-8 pt-[10vh] flex justify-center">
-        <div className="mx-auto w-full max-w-7xl h-[75vh] bg-white rounded-2xl border border-black p-6 shadow-sm flex flex-col">
+      <main className="flex-1 p-8 flex justify-center">
+        <div className="mx-auto w-full max-w-7xl flex-1 bg-white rounded-2xl border border-black p-6 shadow-sm flex flex-col">
           <div className="flex-1 min-h-0">
             <FullCalendar
               ref={calendarRef}
@@ -229,7 +230,25 @@ export default function Home() {
                   setShowEventoModal(true);
                 }
               }}
-              dateClick={() => setShowPopupCriarEvento(true)}
+              dateClick={(info) => {
+                const data = info.dateStr; // yyyy-mm-dd
+                setEventoSelecionado(null);
+                setEventoParaEditar({
+                  Nome_do_Evento: "",
+                  Descriçao: "",
+                  Local: "",
+                  categoria: "",
+                  Data_Horario_Inicio: `${data}T00:00:00`,
+                  Data_Horario_Fim: `${data}T00:00:00`,
+                  Data_Lembrete: `${data}T00:00:00`,
+                  Recorrente: false,
+                  Tipo_Recorrencia: null,
+                  Recorrente_ate: null,
+                  convidados: [],
+                  grupos_convidados: [],
+                });
+                setShowPopupCriarEvento(true);
+              }}
             />
 
             <PopupCriarEvento
@@ -240,6 +259,7 @@ export default function Home() {
               }}
               onSave={handleSaveEvento}
               eventoInicial={eventoParaEditar}
+              //dataInicial={dataSelecionada}
             />
 
             {showEventoModal && eventoSelecionado && (

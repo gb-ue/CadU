@@ -28,6 +28,7 @@ interface PopupCriarEventoProps {
   onClose: () => void;
   onSave: (evento: EventoBase | EventoEdicao) => void;
   eventoInicial?: EventoEdicao | null;
+  //dataInicial?: string | null;
 }
 
 export default function PopupCriarEvento({
@@ -82,6 +83,7 @@ export default function PopupCriarEvento({
       const fim = new Date(eventoInicial.Data_Horario_Fim);
 
       setDataInicio(inicio.toISOString().slice(0, 10));
+      setDataFim(fim.toISOString().slice(0, 10));
       setHoraInicio(inicio.toTimeString().slice(0, 5));
       setHoraFim(fim.toTimeString().slice(0, 5));
 
@@ -89,19 +91,24 @@ export default function PopupCriarEvento({
       setRepetir(eventoInicial.Tipo_Recorrencia ?? "");
       setRepetirAte("");
     } else {
-      
       setTitle("");
       setDescricao("");
       setLocal("");
       setCategoria("");
+
       setDataInicio("");
+      setDataFim("");
       setHoraInicio("");
       setHoraFim("");
+
       setEventoRecorrente(false);
       setRepetir("");
       setRepetirAte("");
+      setLembrar("");
+      setConvidadosSelecionado("");
     }
   }, [isOpen, eventoInicial]);
+
   
   if (!isOpen) return null;
 
@@ -134,16 +141,15 @@ export default function PopupCriarEvento({
       return;
     }
 
-    if (!dataInicio || !horaInicio || !dataFim || !horaFim) {
+    if (!dataInicio || !horaInicio || !horaFim) {
       alert("Preencha data e hora de início e fim.");
       return;
     }
 
     const inicioISO = `${dataInicio}T${horaInicio}:00`;
     const fimISO = eventoRecorrente
-      ? `${dataInicio}T${horaFim}:00` // mesma data do início
+      ? `${dataInicio}T${horaFim}:00`
       : `${dataFim}T${horaFim}:00`;
-
 
     const dataLembrete =
       lembrar && lembrar !== "all"
@@ -152,11 +158,7 @@ export default function PopupCriarEvento({
           ).toISOString()
         : new Date(inicioISO).toISOString();
 
-    const convidados: number[] = [];
-    const grupos_convidados: number[] = [];
-
-    onSave({
-      id_Evento: eventoInicial?.id_Evento,
+    const baseEvento = {
       Nome_do_Evento: title,
       Descriçao: descricao,
       Local: local,
@@ -166,13 +168,20 @@ export default function PopupCriarEvento({
       Recorrente: eventoRecorrente,
       Tipo_Recorrencia: eventoRecorrente ? repetir : null,
       Recorrente_ate: calcularRecorrenciaAte(),
-      convidados,
-      grupos_convidados,
+      convidados: [],
+      grupos_convidados: [],
       categoria,
-    });
+    };
+
+    if (eventoInicial) {
+      onSave({ ...baseEvento, id_Evento: eventoInicial.id_Evento });
+    } else {
+      onSave(baseEvento);
+    }
 
     onClose();
   };
+
 
   return (
     <div className="overlay">
