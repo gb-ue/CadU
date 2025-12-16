@@ -319,21 +319,6 @@ export default function PopupCriarEvento({
                 <option value="Outro">Outro</option>
               </select>
             </div>
-
-            <label className="notificacao">
-              <img src="/notificacoes.svg" className="icon" />
-              Lembrar Até
-              <select
-                className="lembrar"
-                value={lembrar}
-                onChange={(e) => setLembrar(e.target.value)}
-              >
-                <option value="10">10 minutos</option>
-                <option value="60">1 hora</option>
-                <option value="1440">1 dia</option>
-                <option value="all">Todos</option>
-              </select>
-            </label>
           </div>
 
           <div className="coluna">

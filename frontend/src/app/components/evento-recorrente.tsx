@@ -97,14 +97,6 @@ export default function EventoRecorrenteModal({
                   />
                 </button>
 
-                <button className="p-1 rounded-full hover:bg-black/5">
-                  <Image
-                    src="/Eye.png"
-                    alt="Ocultar evento"
-                    width={20}
-                    height={20}
-                  />
-                </button>
               </>
             )}
 
@@ -114,15 +106,6 @@ export default function EventoRecorrenteModal({
                   <Image
                     src="/edit.png"
                     alt="Editar"
-                    width={20}
-                    height={20}
-                  />
-                </button>
-
-                <button className="p-1 rounded-full hover:bg-black/5">
-                  <Image
-                    src="/Eye.png"
-                    alt="Ocultar evento"
                     width={20}
                     height={20}
                   />
@@ -189,20 +172,6 @@ export default function EventoRecorrenteModal({
                 />
                 <p className="text-sm text-[#141313]">
                   {evento.local}
-                </p>
-              </div>
-            )}
-
-            {evento.notificacao && (
-              <div className="flex items-start gap-4">
-                <Image
-                  src="/notifications.png"
-                  alt="Notificação"
-                  width={20}
-                  height={20}
-                />
-                <p className="text-sm text-[#141313]">
-                  {evento.notificacao}
                 </p>
               </div>
             )}

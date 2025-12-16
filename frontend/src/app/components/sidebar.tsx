@@ -7,6 +7,14 @@ import PopupDescartarAlteracoes from "./DescartarAlteracoes/page";
 
 interface SidebarProps {
   role: "Administrador" | "Aluno";
+  filtros: {
+    "Evento Acadêmico": boolean;
+    "Evento Pessoal": boolean;
+    "Outro": boolean;
+  };
+  onToggleFiltro: (
+    categoria: "Evento Acadêmico" | "Evento Pessoal" | "Outro"
+  ) => void;
 }
 
 interface Grupo {
@@ -15,7 +23,7 @@ interface Grupo {
   id_Organizador: number;
 }
 
-export default function Sidebar({ role }: SidebarProps) {
+export default function Sidebar({ role, filtros, onToggleFiltro, }: SidebarProps) {
   const router = useRouter();
 
   const [collapsed, setCollapsed] = useState(false);
@@ -28,9 +36,6 @@ export default function Sidebar({ role }: SidebarProps) {
   const [grupoSelecionado, setGrupoSelecionado] = useState<Grupo | null>(null);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const [grupoParaExcluir, setGrupoParaExcluir] = useState<Grupo | null>(null);
-
-
-
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -194,15 +199,15 @@ const handleDeleteGrupo = async () => {
                     {grupo.Nome_Grupo}
                   </span>
                   <img
-  src="/Trash.svg"
-  alt="Excluir Grupo"
-  className="w-4 h-4"
-  onClick={(e) => {
-    e.stopPropagation();
-    setGrupoParaExcluir(grupo);
-    setOpenDeletePopup(true);
-  }}
-/>
+                  src="/Trash.svg"
+                  alt="Excluir Grupo"
+                  className="w-4 h-4"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setGrupoParaExcluir(grupo);
+                    setOpenDeletePopup(true);
+                  }}
+                />
                 </button>
               ))}
 
@@ -220,7 +225,7 @@ const handleDeleteGrupo = async () => {
           )}
         </div>
 
-        {/*Seção de filtrar eventos */}
+        {/* Seção de Filtros */}
         <div className="mb-6">
           <button
             onClick={() => setOpenFilters(!openFilters)}
@@ -235,50 +240,28 @@ const handleDeleteGrupo = async () => {
           </button>
 
           {!collapsed && openFilters && (
-            <div className="mt-4 pl-2">
-              <label className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  defaultChecked
-                  className="w-5 h-5 accent-[#C4838C] cursor-pointer"
-                />
-                <span className="text-[20px] text-[#141313]/80">
-                  Feriados
-                </span>
-              </label>
+            <div className="mt-4 pl-2 flex flex-col gap-3">
+              {(
+                ["Evento Acadêmico", "Evento Pessoal", "Outro"] as const
+              ).map((categoria) => (
+                <label
+                  key={categoria}
+                  className="flex items-center gap-3 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={filtros[categoria]}
+                    onChange={() => onToggleFiltro(categoria)}
+                    className="w-5 h-5 accent-[#C4838C]"
+                  />
+                  <span className="text-[20px] text-[#141313]/80">
+                    {categoria}
+                  </span>
+                </label>
+              ))}
             </div>
           )}
         </div>
-
-        {/*Seção de Eventos Ocultos */}
-        {!collapsed && role === "Aluno" && (
-          <div className="mb-6">
-            <button
-              onClick={() => setOpenHiddenEvents(!openHiddenEvents)}
-              className="w-full flex items-center justify-between cursor-pointer"
-            >
-              <span className="text-[25px] text-[#141313] font-normal">
-                Eventos Ocultos
-              </span>
-              <ChevronIcon open={openHiddenEvents} />
-            </button>
-
-            {openHiddenEvents && (
-              <div className="mt-4 pl-2">
-                <button className="flex items-center gap-2 cursor-pointer">
-                  <img
-                    src="Eye-off.png"
-                    alt="Eventos Ocultos"
-                    className="w-7 h-7"
-                  />
-                  <span className="text-[20px] text-[#141313]/80">
-                    Mostrar Eventos
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       {/*Logout */}
@@ -293,36 +276,36 @@ const handleDeleteGrupo = async () => {
       </button>
 
       <PopupAdicionarGrupos
-  isOpen={openAddGroup}
-  onClose={() => {
-    setOpenAddGroup(false);
-    setGrupoSelecionado(null);
-  }}
-  onConfirm={() => {
-    fetchGrupos();
-    setGrupoSelecionado(null);
-    setOpenAddGroup(false);
-  }}
-  grupo={
-    grupoSelecionado
-      ? {
-          id_Grupo: grupoSelecionado.id_Grupo,
-          Nome_Grupo: grupoSelecionado.Nome_Grupo,
-          emails: [], // ⚠️ veja observação abaixo
+        isOpen={openAddGroup}
+        onClose={() => {
+          setOpenAddGroup(false);
+          setGrupoSelecionado(null);
+        }}
+        onConfirm={() => {
+          fetchGrupos();
+          setGrupoSelecionado(null);
+          setOpenAddGroup(false);
+        }}
+        grupo={
+          grupoSelecionado
+            ? {
+                id_Grupo: grupoSelecionado.id_Grupo,
+                Nome_Grupo: grupoSelecionado.Nome_Grupo,
+                emails: [],
+              }
+            : undefined
         }
-      : undefined
-  }
-/>
+      />
 
-<PopupDescartarAlteracoes
-  isOpen={openDeletePopup}
-  titulo="Certeza que deseja excluir este grupo?"
-  onClose={() => {
-    setOpenDeletePopup(false);
-    setGrupoParaExcluir(null);
-  }}
-  onConfirm={handleDeleteGrupo}
-/>
+      <PopupDescartarAlteracoes
+        isOpen={openDeletePopup}
+        titulo="Certeza que deseja excluir este grupo?"
+        onClose={() => {
+          setOpenDeletePopup(false);
+          setGrupoParaExcluir(null);
+        }}
+        onConfirm={handleDeleteGrupo}
+      />
 
     </aside>
   );

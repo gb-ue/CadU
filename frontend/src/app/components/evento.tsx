@@ -76,15 +76,6 @@ export default function EventoModal({
                   <Image src="/edit.png" alt="Editar" width={20} height={20} />
                 </button>
 
-                <button className="p-1 rounded-full hover:bg-black/5">
-                  <Image
-                    src="/Eye.png"
-                    alt="Ocultar evento"
-                    width={20}
-                    height={20}
-                  />
-                </button>
-
                 <button className="p-1 rounded-full hover:bg-black/5" onClick={onDelete}>
                   <Image
                     src="/delete.png"
@@ -98,15 +89,6 @@ export default function EventoModal({
 
             {!isCriador && (
               <>
-                <button className="p-1 rounded-full hover:bg-black/5">
-                  <Image
-                    src="/Eye.png"
-                    alt="Ocultar evento"
-                    width={20}
-                    height={20}
-                  />
-                </button>
-
                 <button className="p-1 rounded-full hover:bg-black/5">
                   <Image
                     src="/recusar.png"
@@ -162,19 +144,6 @@ export default function EventoModal({
               </div>
             )}
 
-            {evento.notificacao && (
-              <div className="flex items-start gap-4">
-                <Image
-                  src="/notifications.png"
-                  alt="Notificação"
-                  width={20}
-                  height={20}
-                />
-                <p className="text-sm text-[#141313]">
-                  {evento.notificacao}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>

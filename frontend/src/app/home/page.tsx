@@ -14,6 +14,11 @@ import { mapEventoToCalendar } from "../mapEventoToCalendar";
 import EventoModal from "../components/evento";
 import EventoRecorrenteModal from "../components/evento-recorrente";
 
+type Categoria =
+  | "Evento Acadêmico"
+  | "Evento Pessoal"
+  | "Outro";
+
 export async function createEvento(evento: any) {
   const res = await fetch("http://localhost:8080/usuario/eventos/create", {
     method: "POST",
@@ -74,6 +79,20 @@ export default function Home() {
   const [role, setRole] = useState<"Administrador" | "Aluno">("Aluno");
   const [userId, setUserId] = useState<number | null>(null);
 
+  const [filtros, setFiltros] = useState<Record<Categoria, boolean>>({
+    "Evento Acadêmico": true,
+    "Evento Pessoal": true,
+    "Outro": true,
+  });
+
+
+  const toggleFiltro = (categoria: Categoria) => {
+    setFiltros((prev) => ({
+      ...prev,
+      [categoria]: !prev[categoria],
+    }));
+  };
+
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) setUserId(Number(storedUserId));
@@ -129,7 +148,11 @@ export default function Home() {
 
   return (
     <div className="h-screen flex bg-white overflow-hidden">
-      <Sidebar role={role} />
+      <Sidebar 
+      role={role}
+      filtros={filtros}
+      onToggleFiltro={toggleFiltro}
+      />
 
       <main className="flex-1 p-8 flex justify-center">
         <div className="mx-auto w-full max-w-7xl flex-1 bg-white rounded-2xl border border-black p-6 shadow-sm flex flex-col">
@@ -182,7 +205,10 @@ export default function Home() {
                       return;
                     }
 
-                    successCallback(data.map(mapEventoToCalendar));
+                    const eventosFiltrados = data.filter(
+                      (evento: any) => filtros[evento.categoria as Categoria]
+                    );
+                    successCallback(eventosFiltrados.map(mapEventoToCalendar));
                   } catch (error) {
                     console.error("Erro ao carregar eventos:", error);
                     failureCallback(
